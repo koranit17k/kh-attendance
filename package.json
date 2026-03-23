@@ -2,11 +2,15 @@
   "name": "docus-starter",
   "scripts": {
     "dev": "nuxt dev --extends docus",
+    "server": "node server.js",
     "build": "nuxt build --extends docus"
   },
   "dependencies": {
     "better-sqlite3": "^12.6.2",
+    "cors": "^2.8.6",
     "docus": "latest",
+    "express": "^5.2.1",
+    "mysql2": "^3.20.0",
     "nuxt": "^4.3.1",
     "vue": "^3.5.30"
   }

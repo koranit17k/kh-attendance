@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 
 const count = ref(0)
+const message = ref('')
 
 function increase() {
   count.value++
@@ -12,6 +13,26 @@ function decrease() {
     count.value--
   // }
 }
+
+async function saveCount() {
+  try {
+    const res = await fetch('http://localhost:3001/api/counter', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        count: count.value
+      })
+    })
+
+    const data = await res.json()
+    message.value = data.message || 'บันทึกแล้ว'
+  } catch (error) {
+    console.error(error)
+    message.value = 'บันทึกไม่สำเร็จ'
+  }
+}
 </script>
 
 <template>
@@ -19,7 +40,10 @@ function decrease() {
     <button @click="decrease">-</button>
     <span>{{ count }}</span>
     <button @click="increase">+</button>
+    <button @click="saveCount">save</button>
   </div>
+
+  <p>{{ message }}</p>
 </template>
 
 <style scoped>
@@ -34,9 +58,9 @@ function decrease() {
 }
 
 button {
-  width: 36px;
+  width: 60px;
   height: 36px;
-  font-size: 20px;
+  font-size: 16px;
   border: 1px solid #000000;
   border-radius: 8px;
   color: #000000;
