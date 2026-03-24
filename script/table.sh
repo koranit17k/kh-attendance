@@ -1,8 +1,6 @@
 sudo mysql
 USE payroll;
-CREATE TABLE counter_logs (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  count_value INT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE `counter` (
+  `value` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp()
 );
-หีก
