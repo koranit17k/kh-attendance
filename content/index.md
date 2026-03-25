@@ -1,10 +1,10 @@
 ::u-page-hero
 #title 
-sad  
+Attendance calendar
 #description
-website visitor
 
-<calendar />
+::calendar
+::
 
 ::u-page-section
 #title
@@ -52,7 +52,7 @@ website visitor
   :::
 
 
-
+::
 <counter />
 #description
 website visitor

@@ -4,7 +4,7 @@ const { data: count } = await useFetch('/api/counter')
 
 <template>
   <div>
-    <h1>{{ count }}</h1>
+    <h1>{{ count?.value ?? 0 }}</h1>
   </div>
 </template>
 
