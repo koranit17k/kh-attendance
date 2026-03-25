@@ -1,9 +1,8 @@
 import { pool } from '../utils/db'
 
 export default defineEventHandler(async (event) => {
-  const path = getRequestPath(event)
-
-  // ไม่นับ api / asset
+  const path = event.path
+    // ไม่นับ api / asset
   if (path.startsWith('/api/') || path.startsWith('/_') || path.includes('.')) {
     return
   }
