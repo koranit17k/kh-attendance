@@ -4,7 +4,9 @@ Attendance
 #description
 
 ::calendar
-
+::
+::attend-sum
+::
 
 #links
   :::u-button{color="neutral" size="xl" class="text-2xl px-8 py-4" to="/project-kh-att/workflow"}

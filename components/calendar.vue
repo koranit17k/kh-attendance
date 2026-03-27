@@ -1,19 +1,30 @@
 <script setup lang="ts">
 import { CalendarDate, today, getLocalTimeZone, parseDate } from '@internationalized/date'
 
-const modelValue = shallowRef<{ start: CalendarDate | undefined, end: CalendarDate | undefined }>({
-  start: today(getLocalTimeZone()),
-  end: today(getLocalTimeZone())
+const rangeState = useState<{ start: string, end: string }>('attendance-range', () => ({
+  start: today(getLocalTimeZone()).toString(),
+  end: today(getLocalTimeZone()).toString()
+}))
+
+const internalRange = computed({
+  get: () => ({
+    start: parseDate(rangeState.value.start),
+    end: parseDate(rangeState.value.end)
+  }),
+  set: (val) => {
+    if (val.start) rangeState.value.start = val.start.toString()
+    if (val.end) rangeState.value.end = val.end.toString()
+  }
 })
 
 const startDateStr = computed({
-  get: () => modelValue.value.start?.toString(),
-  set: (val) => { if (val) modelValue.value = { ...modelValue.value, start: parseDate(val) } }
+  get: () => rangeState.value.start,
+  set: (val) => { if (val) rangeState.value.start = val }
 })
 
 const endDateStr = computed({
-  get: () => (modelValue.value.end || modelValue.value.start)?.toString(),
-  set: (val) => { if (val) modelValue.value = { ...modelValue.value, end: parseDate(val) } }
+  get: () => rangeState.value.end,
+  set: (val) => { if (val) rangeState.value.end = val }
 })
 
 const { data: counterData } = await useFetch<{ value: number, dates: string[] }>('/api/calendar')
@@ -63,7 +74,7 @@ function getColorByDate(date: Date) {
       <UInput v-model="endDateStr" :icon="null" :ui="{ base: 'text-center' }" class="w-32" />
     </div>
 
-    <UCalendar v-model="modelValue"
+    <UCalendar v-model="internalRange"
       :default-placeholder="today(getLocalTimeZone()).subtract({ months: 1 })"
       :number-of-months="2" 
       :range="true">
