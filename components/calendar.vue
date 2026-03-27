@@ -3,7 +3,7 @@ import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date'
 
 const modelValue = shallowRef(today(getLocalTimeZone()))
 
-const { data: counterData } = await useFetch<{ value: number, dates: string[] }>('/api/counter')
+const { data: counterData } = await useFetch<{ value: number, dates: string[] }>('/api/calendar')
 
 const highlightedDates = computed(() => {
   if (!counterData.value?.dates) return new Set<string>()
