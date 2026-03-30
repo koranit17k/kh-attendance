@@ -6,25 +6,45 @@ const rangeState = useState<{ start: string, end: string }>('attendance-range', 
   end: today(getLocalTimeZone()).toString()
 }))
 
+const isSelecting = useState('attendance-selecting', () => false)
+const calendarResetId = useState('calendar-reset-id', () => 0)
+
 const internalRange = computed({
   get: () => ({
     start: parseDate(rangeState.value.start),
-    end: parseDate(rangeState.value.end)
+    end: isSelecting.value ? undefined : parseDate(rangeState.value.end)
   }),
   set: (val) => {
-    if (val.start) rangeState.value.start = val.start.toString()
-    if (val.end) rangeState.value.end = val.end.toString()
+    if (val.start && !val.end) {
+      isSelecting.value = true
+      rangeState.value.start = val.start.toString()
+      rangeState.value.end = val.start.toString()
+    } else if (val.start && val.end) {
+      isSelecting.value = false
+      rangeState.value.start = val.start.toString()
+      rangeState.value.end = val.end.toString()
+    }
   }
 })
 
 const startDateStr = computed({
   get: () => rangeState.value.start,
-  set: (val) => { if (val) rangeState.value.start = val }
+  set: (val) => { 
+    if (val) {
+      rangeState.value.start = val
+      isSelecting.value = false
+    }
+  }
 })
 
 const endDateStr = computed({
   get: () => rangeState.value.end,
-  set: (val) => { if (val) rangeState.value.end = val }
+  set: (val) => { 
+    if (val) {
+      rangeState.value.end = val
+      isSelecting.value = false
+    }
+  }
 })
 
 const { data: counterData } = await useFetch<{ value: number, dates: string[] }>('/api/calendar')
@@ -74,7 +94,7 @@ function getColorByDate(date: Date) {
       <UInput v-model="endDateStr" :icon="null" :ui="{ base: 'text-center' }" class="w-32" />
     </div>
 
-    <UCalendar v-model="internalRange"
+    <UCalendar v-model="internalRange" :key="calendarResetId"
       :default-placeholder="today(getLocalTimeZone()).subtract({ months: 1 })"
       :number-of-months="2" 
       :range="true">

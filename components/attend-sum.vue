@@ -14,6 +14,8 @@ const range = useState<{ start: string, end: string }>('attendance-range', () =>
   start: today(getLocalTimeZone()).toString(),
   end: today(getLocalTimeZone()).toString()
 }))
+const isSelecting = useState('attendance-selecting', () => false)
+const calendarResetId = useState('calendar-reset-id', () => 0)
 
 const queryParams = computed(() => ({
   startDate: range.value.start,
@@ -27,6 +29,14 @@ const { data, pending, error, refresh } = await useFetch<AttendanceSummary>(
     watch: [queryParams]
   }
 )
+
+const resetAndRefresh = async () => {
+  isSelecting.value = false
+  range.value.start = today(getLocalTimeZone()).toString()
+  range.value.end = today(getLocalTimeZone()).toString()
+  calendarResetId.value++
+  await refresh()
+}
 </script>
 
 <template>
@@ -37,13 +47,9 @@ const { data, pending, error, refresh } = await useFetch<AttendanceSummary>(
         label="Refresh"
         icon="i-lucide-refresh-cw"
         variant="outline"
-        @click="refresh()"
+        @click="resetAndRefresh"
       />
     </div>
-
-    <p class="text-sm text-muted">
-      ช่วงวันที่ {{ queryParams.startDate }} ถึง {{ queryParams.endDate }}
-    </p>
 
     <div v-if="pending">Loading...</div>
     <div v-else-if="error">โหลดข้อมูลไม่สำเร็จ</div>

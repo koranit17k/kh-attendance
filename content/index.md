@@ -66,6 +66,8 @@ Attendance
 
 
 ::
-<counter />
-#description
-website visitor
+
+::div{class="flex flex-col items-center justify-center pt-8 pb-12"}
+<counter></counter>
+<p class="text-gray-500 mt-2">website visitor</p>
+::
