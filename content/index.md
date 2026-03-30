@@ -10,10 +10,6 @@
 :::u-button{color="neutral" size="xl" class="text-2xl px-8 py-4" to="/project-kh-att/workflow"}
 enter site
 :::
-
-:::u-button{color="secondary" variant="outline" size="xl" class="text-2xl px-8 py-4" icon="simple-icons-nuxt" to="https://docus.dev/en"}
-Docus.dev
-:::
 ::
 
 ::u-page-section
