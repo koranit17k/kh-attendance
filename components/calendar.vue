@@ -29,7 +29,7 @@ const internalRange = computed({
 
 const startDateStr = computed({
   get: () => rangeState.value.start,
-  set: (val) => { 
+  set: (val) => {
     if (val) {
       rangeState.value.start = val
       isSelecting.value = false
@@ -39,7 +39,7 @@ const startDateStr = computed({
 
 const endDateStr = computed({
   get: () => rangeState.value.end,
-  set: (val) => { 
+  set: (val) => {
     if (val) {
       rangeState.value.end = val
       isSelecting.value = false
@@ -60,44 +60,47 @@ const highlightedDates = computed(() => {
 function getColorByDate(date: Date) {
   // Use UTC components to match the date object from toDate('UTC')
   const dateStr = `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')}`
-  
+
   // Get current date string in UTC
   const now = new Date()
   const todayStr = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}-${String(now.getUTCDate()).padStart(2, '0')}`
-  
+
   const isWeekend = date.getDay() == 0
-  
+
   // If date is in the future, return undefined
   if (dateStr > todayStr || isWeekend) {
     return undefined
   }
- 
+
   // If date is today, return neutral
   if (dateStr === todayStr) {
     return 'neutral'
   }
- 
+
   // If date is in the past, return success if highlighted, error if not
   if (highlightedDates.value.has(dateStr)) {
     return 'success'
   }
- 
+
   return 'error'
 }
 </script>
- 
+
 <template>
   <div class="space-y-5 w-full flex-col items-center">
     <div class="flex items-center justify-center gap-2">
-      <UInput v-model="startDateStr" :icon="null" :ui="{ base: 'text-center' }" class="w-32" />
+      <UInput v-model="startDateStr" :icon="null" :ui="{ base: 'text-center' }" class="w-48" />
       <span class="text-gray-500 font-bold">-</span>
-      <UInput v-model="endDateStr" :icon="null" :ui="{ base: 'text-center' }" class="w-32" />
+      <UInput v-model="endDateStr" :icon="null" :ui="{ base: 'text-center' }" class="w-48" />
     </div>
 
     <UCalendar v-model="internalRange" :key="calendarResetId"
-      :default-placeholder="today(getLocalTimeZone()).subtract({ months: 1 })"
-      :number-of-months="2" 
-      :range="true">
+      :default-placeholder="today(getLocalTimeZone()).subtract({ months: 1 })" :number-of-months="2" :range="true" :ui="{
+        heading: 'text-lg font-bold text-white'
+      }" :prev-month="{ size: 'xl', variant: 'ghost', color: 'neutral' }"
+      :next-month="{ size: 'xl', variant: 'ghost', color: 'neutral' }"
+      :prev-year="{ size: 'xl', variant: 'ghost', color: 'neutral' }"
+      :next-year="{ size: 'xl', variant: 'ghost', color: 'neutral' }">
       <template #day="{ day }">
         <UChip :show="!!getColorByDate(day.toDate('UTC'))" :color="getColorByDate(day.toDate('UTC'))" size="2xs">
           {{ day.day }}

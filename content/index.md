@@ -1,21 +1,19 @@
-::u-page-hero
-#title 
-Attendance
-#description
+::u-page-hero{title="Attendance" :ui="{ title: 'text-3xl sm:text-4xl font-bold mb-8', root: 'pb-8' }"}
 
 ::calendar
 ::
+
 ::attend-sum
 ::
 
 #links
-  :::u-button{color="neutral" size="xl" class="text-2xl px-8 py-4" to="/project-kh-att/workflow"}
-  enter site
-  :::
+:::u-button{color="neutral" size="xl" class="text-2xl px-8 py-4" to="/project-kh-att/workflow"}
+enter site
+:::
 
-  :::u-button{color="secondary" variant="outline" size="xl" class="text-2xl px-8 py-4" icon="simple-icons-nuxt" to="https://docus.dev/en"}
-  Docus.dev
-  :::
+:::u-button{color="secondary" variant="outline" size="xl" class="text-2xl px-8 py-4" icon="simple-icons-nuxt" to="https://docus.dev/en"}
+Docus.dev
+:::
 ::
 
 ::u-page-section
@@ -23,48 +21,44 @@ Attendance
 ข้อมูลทั่วไป
 
 #features
-  :::u-page-feature
-  ---
-  icon: i-simple-icons-nuxt
-  target: _blank
-  to: /project-kh-att/workflow
-  ---
-  #title
-  [ขั้นตอนการทำงาน]{.text-primary}
+:::u-page-feature
+---
+icon: i-simple-icons-nuxt
+target: _blank
+to: /project-kh-att/workflow
+---
+#title
+[ขั้นตอนการทำงาน]{.text-primary}
 
-  #description
-  แนวทางและลำดับขั้นตอนการทำงาน (Workflow)
-  :::
+#description
+แนวทางและลำดับขั้นตอนการทำงาน (Workflow)
+:::
 
 :::u-page-feature
-  ---
-  icon: i-simple-icons-nuxt
-  target: _blank
-  to: https://ui.nuxt.com/docs/components
-  ---
-  #title
-  [Nuxt.ui component]{.text-primary}
+---
+icon: i-simple-icons-nuxt
+target: _blank
+to: https://ui.nuxt.com/docs/components
+---
+#title
+[Nuxt.ui component]{.text-primary}
 
-  #description
-  component ที่ใช้ในการพัฒนาซอฟแวร์
-  :::
-
+#description
+component ที่ใช้ในการพัฒนาซอฟแวร์
+:::
 
 :::u-page-feature
-  ---
-  icon: i-simple-icons-nuxt
-  target: _blank
-  to: https://nuxtcharts.com/charts
-  ---
-  #title
-  [Nuxt.ui chart]{.text-primary}
+---
+icon: i-simple-icons-nuxt
+target: _blank
+to: https://nuxtcharts.com/charts
+---
+#title
+[Nuxt.ui chart]{.text-primary}
 
-  #description
-  chart ที่ใช้ในการพัฒนาซอฟแวร์
-  :::
-
-
-
+#description
+chart ที่ใช้ในการพัฒนาซอฟแวร์
+:::
 ::
 
 ::div{class="flex flex-col items-center justify-center pt-8 pb-12"}
