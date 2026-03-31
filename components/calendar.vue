@@ -89,21 +89,21 @@ function getColorByDate(date: Date) {
 <template>
   <div class="space-y-5 w-full flex-col items-center">
     <div class="flex items-center justify-center gap-2">
-      <UInput v-model="startDateStr" :icon="null" :ui="{ base: 'text-center' }" class="w-48" />
-      <span class="text-gray-500 font-bold">-</span>
-      <UInput v-model="endDateStr" :icon="null" :ui="{ base: 'text-center' }" class="w-48" />
+      <UInput v-model="startDateStr" :icon="null" :ui="{ base: 'text-center text-xl py-2' }" class="w-56" />
+      <span class="text-gray-500 font-bold text-2xl">-</span>
+      <UInput v-model="endDateStr" :icon="null" :ui="{ base: 'text-center text-xl py-2' }" class="w-56" />
     </div>
 
     <UCalendar v-model="internalRange" :key="calendarResetId"
       :default-placeholder="today(getLocalTimeZone()).subtract({ months: 1 })" :number-of-months="2" :range="true" :ui="{
-        heading: 'text-lg font-bold text-white'
+        heading: 'text-2xl font-bold text-gray-900 dark:text-white'
       }" :prev-month="{ size: 'xl', variant: 'ghost', color: 'neutral' }"
       :next-month="{ size: 'xl', variant: 'ghost', color: 'neutral' }"
       :prev-year="{ size: 'xl', variant: 'ghost', color: 'neutral' }"
       :next-year="{ size: 'xl', variant: 'ghost', color: 'neutral' }">
       <template #day="{ day }">
-        <UChip :show="!!getColorByDate(day.toDate('UTC'))" :color="getColorByDate(day.toDate('UTC'))" size="2xs">
-          {{ day.day }}
+        <UChip :show="!!getColorByDate(day.toDate('UTC'))" :color="getColorByDate(day.toDate('UTC'))" size="xs">
+          <span class="text-lg">{{ day.day }}</span>
         </UChip>
       </template>
     </UCalendar>

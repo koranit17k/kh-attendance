@@ -41,7 +41,7 @@ const resetAndRefresh = async () => {
 </script>
 
 <template>
-  <div class="space-y-4 text-white">
+  <div class="space-y-4 text-gray-900 dark:text-white">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold">Attendance Summary</h1>
       <UButton
@@ -57,30 +57,30 @@ const resetAndRefresh = async () => {
 
     <div v-else class="grid grid-cols-2 md:grid-cols-4 gap-4">
       <UCard>
-        <div class="space-y-2">
-          <p class="text-sm text-muted text-white">เต็มวัน</p>
-          <p class="text-4xl font-bold">{{ data?.fullDay ?? 0 }}</p>
+        <div class="space-y-4 text-center">
+          <p class="text-xl text-gray-500 dark:text-gray-400">เต็มวัน</p>
+          <p class="text-6xl font-bold">{{ data?.fullDay ?? 0 }}</p>
         </div>
       </UCard>
 
       <UCard>
-        <div class="space-y-2">
-          <p class="text-sm text-muted text-white">ครึ่งวัน</p>
-          <p class="text-4xl font-bold">{{ data?.halfDay ?? 0 }}</p>
+        <div class="space-y-4 text-center">
+          <p class="text-xl text-gray-500 dark:text-gray-400">ครึ่งวัน</p>
+          <p class="text-6xl font-bold">{{ data?.halfDay ?? 0 }}</p>
         </div>
       </UCard>
 
       <UCard>
-        <div class="space-y-2">
-          <p class="text-sm text-muted text-white">ขาด</p>
-          <p class="text-4xl font-bold">{{ data?.absent ?? 0 }}</p>
+        <div class="space-y-4 text-center">
+          <p class="text-xl text-gray-500 dark:text-gray-400">ขาด</p>
+          <p class="text-6xl font-bold">{{ data?.absent ?? 0 }}</p>
         </div>
       </UCard>
 
       <UCard>
-        <div class="space-y-2">
-          <p class="text-sm text-muted text-white">มาสาย</p>
-          <p class="text-4xl font-bold">{{ data?.late ?? 0 }}</p>
+        <div class="space-y-4 text-center">
+          <p class="text-xl text-gray-500 dark:text-gray-400">มาสาย</p>
+          <p class="text-6xl font-bold">{{ data?.late ?? 0 }}</p>
         </div>
       </UCard>
     </div>

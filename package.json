@@ -2,7 +2,11 @@
   "name": "keehin-attendance",
   "scripts": {
     "dev": "nuxt dev --extends docus",
-    "build": "nuxt build --extends docus"
+    "build": "nuxt build --extends docus",
+    "test": "npx vitest --run"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.18"
   },
   "dependencies": {
     "@internationalized/date": "^3.12.0",

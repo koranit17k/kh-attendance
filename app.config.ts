@@ -1,13 +1,14 @@
 export default defineAppConfig({
-  docus: {
+  header: {
     title: 'KEEHIN',
-    header: {
-      title: 'KEEHIN'
-    },
-    footer: {
-      credits: {
-        text: 'Powered by KEEHIN'
-      }
+    logo: {
+      light: '/images/khlogo-xs.png',
+      dark: '/images/khlogo-xs.png'
+    }
+  },
+  footer: {
+    credits: {
+      text: 'Powered by KEEHIN'
     }
   }
 })

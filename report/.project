@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>report</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>A00.jrxml</name>
+			<type>1</type>
+			<location>/home/koranit/kxreport/report/A00.jrxml</location>
+		</link>
+	</linkedResources>
+</projectDescription>
