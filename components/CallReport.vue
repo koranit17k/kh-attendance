@@ -2,17 +2,17 @@
   <UCard class="max-w-4xl mx-auto my-8 mt-12">
     <template #header>
       <div class="flex items-center gap-4">
-        <h2 class="text-2xl font-bold">ออกรายงาน</h2>
+        <h2 class="text-3xl font-bold">ออกรายงาน</h2>
       </div>
     </template>
 
     <div class="space-y-6">
       <div class="space-y-2">
-        <label class="font-semibold text-lg block">เลือกรายงาน</label>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+        <label class="font-semibold text-xl block">เลือกรายงาน</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
           <label v-for="opt in reportOptions" :key="opt.value" class="flex items-center gap-3 cursor-pointer">
-            <input type="radio" v-model="form.report" :value="opt.value" class="w-5 h-5 text-primary focus:ring-primary border-gray-300 rounded-full" />
-            <span class="text-gray-700 dark:text-gray-200">{{ opt.label }}</span>
+            <input type="radio" v-model="form.report" :value="opt.value" class="w-6 h-6 text-primary focus:ring-primary border-gray-300 rounded-full" />
+            <span class="text-gray-700 dark:text-gray-200 text-lg">{{ opt.label }}</span>
           </label>
         </div>
       </div>
@@ -20,16 +20,16 @@
       <Calendar />
       
       <div class="space-y-2 border-t pt-6 border-gray-200 dark:border-gray-800">
-        <label class="font-semibold text-lg block">เลือกบริษัท</label>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+        <label class="font-semibold text-xl block">เลือกบริษัท</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
           <label v-for="opt in companyOptions" :key="opt.value" class="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" v-model="form.comCode" :value="opt.value" class="w-5 h-5 text-primary focus:ring-primary border-gray-300 rounded" />
-            <span class="text-gray-700 dark:text-gray-200">{{ opt.label }}</span>
+            <input type="checkbox" v-model="form.comCode" :value="opt.value" class="w-6 h-6 text-primary focus:ring-primary border-gray-300 rounded" />
+            <span class="text-gray-700 dark:text-gray-200 text-lg">{{ opt.label }}</span>
           </label>
         </div>
       </div>
       
-      <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800 text-sm text-gray-500">
+      <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800 text-l text-gray-500">
         <p>วันที่ออกรายงาน: <strong>{{ formatDate(rangeState.start) }}</strong> ถึง <strong>{{ formatDate(rangeState.end) }}</strong> </p>
       </div>
     </div>
