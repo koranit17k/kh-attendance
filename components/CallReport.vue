@@ -9,23 +9,31 @@
     <div class="space-y-6">
       <div class="space-y-2">
         <label class="font-semibold text-xl block">เลือกรายงาน</label>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
-          <label v-for="opt in reportOptions" :key="opt.value" class="flex items-center gap-3 cursor-pointer">
-            <input type="radio" v-model="form.report" :value="opt.value" class="w-6 h-6 text-primary focus:ring-primary border-gray-300 rounded-full" />
-            <span class="text-gray-700 dark:text-gray-200 text-lg">{{ opt.label }}</span>
-          </label>
-        </div>
+        <URadioGroup
+          v-model="form.report"
+          indicator="start"
+          variant="table"
+          :items="reportOptions"
+          :ui="{ label: 'text-lg leading-7 my-auto', item: 'items-center', container: 'self-center' }"
+          class="mt-3"
+        />
       </div>
 
       <Calendar />
-      
+
       <div class="space-y-2 border-t pt-6 border-gray-200 dark:border-gray-800">
         <label class="font-semibold text-xl block">เลือกบริษัท</label>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
-          <label v-for="opt in companyOptions" :key="opt.value" class="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" v-model="form.comCode" :value="opt.value" class="w-6 h-6 text-primary focus:ring-primary border-gray-300 rounded" />
-            <span class="text-gray-700 dark:text-gray-200 text-lg">{{ opt.label }}</span>
-          </label>
+        <div class="mt-3 grid grid-cols-2 grid-rows-4 grid-flow-col gap-2">
+          <UCheckbox
+            v-for="opt in companyOptions"
+            :key="opt.value"
+            :model-value="form.comCode.includes(opt.value)"
+            @update:model-value="toggleCompany(opt.value)"
+            :label="opt.label"
+            indicator="start"
+            variant="card"
+            :ui="{ label: 'text-lg leading-7 my-auto', wrapper: 'items-center', container: 'self-center' }"
+          />
         </div>
       </div>
       
@@ -74,13 +82,19 @@ const clearForm = () => {
   rangeState.value.end = today(getLocalTimeZone()).toString()
 }
 
+const toggleCompany = (code: string) => {
+  const idx = form.comCode.indexOf(code)
+  if (idx === -1) form.comCode.push(code)
+  else form.comCode.splice(idx, 1)
+}
+
 const reportOptions = [
   { value: 'A01', label: '1 เช็คเวลาประจำวัน' },
   { value: 'A02', label: '2 ตรวจสอบรายบุคคล' },
   { value: 'A03', label: '3 สรุปประจำเดือน' },
   { value: 'A04', label: '4 วิเคราะห์พนักงาน' },
   { value: 'A05', label: '5 วิเคราะห์บริษัท' }
-]
+] as { value: string; label: string }[]
 
 const companyOptions = [
   { value: '01', label: '1 กี่หิ้น การไฟฟ้าภูเก็ต' },

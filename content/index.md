@@ -47,10 +47,10 @@ to: https://ui.nuxt.com/docs/components
 ---
 icon: i-simple-icons-nuxt
 target: _blank
-to: https://nuxtcharts.com/charts
+to: https://nuxt.com/modules/echarts
 ---
 #title
-[Nuxt.ui chart]{.text-primary .text-2xl}
+[Nuxt echart]{.text-primary .text-2xl}
 
 #description
 [chart ที่ใช้ในการพัฒนาซอฟแวร์]{.text-xl}
