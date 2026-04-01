@@ -38,8 +38,8 @@
       <div class="flex flex-wrap gap-4 justify-between items-center w-full">
         <UButton color="neutral" size="lg" variant="outline" icon="i-heroicons-trash" @click="clearForm">Clear</UButton>
         <div class="flex gap-4">
-          <UButton color="primary" size="lg" icon="i-heroicons-document-text" @click="getPDF">GET PDF (New Tab)</UButton>
-          <UButton color="neutral" size="lg" variant="solid" icon="i-heroicons-arrow-down-tray" @click="openPDF">OPEN PDF (Proxy)</UButton>
+          <UButton color="primary" size="lg" icon="i-heroicons-document-text" @click="getPDF">GET PDF</UButton>
+          <UButton color="neutral" size="lg" variant="solid" icon="i-heroicons-arrow-down-tray" @click="openPDF">OPEN PDF</UButton>
         </div>
       </div>
     </template>
