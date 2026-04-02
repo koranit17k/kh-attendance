@@ -44,7 +44,7 @@
 
     <template #footer>
       <div class="flex flex-wrap gap-4 justify-between items-center w-full">
-        <UButton color="neutral" size="lg" variant="outline" icon="i-heroicons-trash" @click="clearForm">Clear</UButton>
+        <UButton color="neutral" size="lg" variant="outline" icon="i-heroicons-trash" @click="clearForm">reset</UButton>
         <div class="flex gap-4">
           <UButton color="primary" size="lg" icon="i-heroicons-document-text" @click="getPDF">GET PDF</UButton>
           <UButton color="neutral" size="lg" variant="solid" icon="i-heroicons-arrow-down-tray" @click="openPDF">OPEN PDF</UButton>
@@ -62,6 +62,8 @@ const rangeState = useState<{ start: string, end: string }>('attendance-range', 
   start: today(getLocalTimeZone()).toString(),
   end: today(getLocalTimeZone()).toString()
 }))
+const isSelecting = useState('attendance-selecting', () => false)
+const calendarResetId = useState('calendar-reset-id', () => 0)
 
 const formatDate = (dateStr: string) => {
   if (!dateStr) return ''
@@ -78,8 +80,10 @@ const form = reactive({
 const clearForm = () => {
   form.report = ''
   form.comCode = []
+  isSelecting.value = false
   rangeState.value.start = today(getLocalTimeZone()).toString()
   rangeState.value.end = today(getLocalTimeZone()).toString()
+  calendarResetId.value++
 }
 
 const toggleCompany = (code: string) => {

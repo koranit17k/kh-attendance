@@ -1,4 +1,10 @@
-::u-page-hero{title="ระบบตรวจสอบเวลาการทำงาน" :ui="{ title: 'text-3xl sm:text-4xl font-bold mb-8', root: 'pb-8' }"}
+::u-page-hero{title="ระบบตรวจสอบเวลาการทำงาน" :ui="{ title: 'text-3xl sm:text-4xl font-bold mb-8 text-center', root: 'pb-8' }"}
+
+::div{class="flex justify-center"}
+:::u-button{color="neutral" size="xl" class="text-2xl px-8 py-4 mt-2 mx-auto flex w-fit" to="/project-kh-att/workflow"}
+enter site
+:::
+::
 
 ::calendar
 ::
@@ -6,10 +12,9 @@
 ::attend-sum
 ::
 
-#links
-:::u-button{color="neutral" size="xl" class="text-2xl px-8 py-4 mt-12" to="/project-kh-att/workflow"}
-enter site
-:::
+::u-card{class="mt-8"}
+::attendance-chart
+::
 ::
 
 ::u-page-section
@@ -47,10 +52,10 @@ to: https://ui.nuxt.com/docs/components
 ---
 icon: i-simple-icons-nuxt
 target: _blank
-to: https://nuxt.com/modules/echarts
+to: https://echarts.apache.org/en/index.html
 ---
 #title
-[Nuxt echart]{.text-primary .text-2xl}
+[Echarts]{.text-primary .text-2xl}
 
 #description
 [chart ที่ใช้ในการพัฒนาซอฟแวร์]{.text-xl}
