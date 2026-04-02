@@ -26,8 +26,7 @@ export default defineEventHandler(async (event) => {
       ? query.endDate
       : startDate
 
-  // Optimized query: No DATE() function in WHERE or GROUP BY to allow MySQL to use indices.
-  // The attendance.dateAt column is already varchar(10) (YYYY-MM-DD) and indexed as part of PK.
+  // Optimized query: Grouping by Date again for daily breakdown.
   const [rows] = await pool.execute<DailyAttendanceRow[]>(
     `
     SELECT

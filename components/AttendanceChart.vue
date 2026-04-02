@@ -34,6 +34,7 @@ const initChart = () => {
 const updateChart = () => {
   if (!chart || !data.value) return
 
+  // Using Daily Labels (dateAt)
   const dates = data.value.map(item => item.dateAt)
   const fullDays = data.value.map(item => item.fullDay)
   const halfDays = data.value.map(item => item.halfDay)
@@ -87,31 +88,50 @@ const updateChart = () => {
       {
         name: 'เต็มวัน',
         type: 'bar',
+        stack: 'total', // Maintaining Stacked Bar
         data: fullDays,
         itemStyle: { color: '#10b981' }, // green-500
-        barGap: '10%',
-        label: { show: true, position: 'top' }
+        label: { 
+          show: true, 
+          position: 'inside',
+          formatter: (params: any) => params.value > 0 ? params.value : ''
+        }
       },
       {
         name: 'ครึ่งวัน',
         type: 'bar',
+        stack: 'total',
         data: halfDays,
         itemStyle: { color: '#f59e0b' }, // amber-500
-        label: { show: true, position: 'top' }
+        label: { 
+          show: true, 
+          position: 'inside',
+          formatter: (params: any) => params.value > 0 ? params.value : ''
+        }
       },
       {
         name: 'ขาด',
         type: 'bar',
+        stack: 'total',
         data: absents,
         itemStyle: { color: '#ef4444' }, // red-500
-        label: { show: true, position: 'top' }
+        label: { 
+          show: true, 
+          position: 'inside',
+          formatter: (params: any) => params.value > 0 ? params.value : ''
+        }
       },
       {
         name: 'มาสาย',
         type: 'bar',
+        stack: 'total',
         data: lates,
         itemStyle: { color: '#8b5cf6' }, // violet-500
-        label: { show: true, position: 'top' }
+        label: { 
+          show: true, 
+          position: 'inside',
+          formatter: (params: any) => params.value > 0 ? params.value : ''
+        }
       }
     ],
     // Automatically add scrollbar for long date ranges
