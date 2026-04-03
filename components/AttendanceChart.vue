@@ -47,8 +47,8 @@ const updateChart = () => {
       text: 'ความเคลื่อนไหวรายวัน',
       left: 'center',
       textStyle: {
-        fontSize: 18,
-        fontWeight: 400
+        fontSize: 22,
+        fontWeight: 600
       }
     },
     tooltip: {
@@ -59,7 +59,7 @@ const updateChart = () => {
       data: ['เต็มวัน', 'ครึ่งวัน', 'ขาด', 'มาสาย'],
       bottom: 0,
       textStyle: {
-        fontSize: 12
+        fontSize: 14
       }
     },
     grid: {
@@ -74,14 +74,14 @@ const updateChart = () => {
       data: dates,
       axisLabel: {
         rotate: dates.length > 7 ? 45 : 0,
-        fontSize: 11
+        fontSize: 13
       }
     },
     yAxis: {
       type: 'value',
       minInterval: 1,
       axisLabel: {
-        fontSize: 11
+        fontSize: 13
       }
     },
     series: [
@@ -94,6 +94,7 @@ const updateChart = () => {
         label: { 
           show: true, 
           position: 'inside',
+          fontSize: 12,
           formatter: (params: any) => params.value > 0 ? params.value : ''
         }
       },
@@ -106,6 +107,7 @@ const updateChart = () => {
         label: { 
           show: true, 
           position: 'inside',
+          fontSize: 12,
           formatter: (params: any) => params.value > 0 ? params.value : ''
         }
       },
@@ -118,6 +120,7 @@ const updateChart = () => {
         label: { 
           show: true, 
           position: 'inside',
+          fontSize: 12,
           formatter: (params: any) => params.value > 0 ? params.value : ''
         }
       },
@@ -130,6 +133,7 @@ const updateChart = () => {
         label: { 
           show: true, 
           position: 'inside',
+          fontSize: 12,
           formatter: (params: any) => params.value > 0 ? params.value : ''
         }
       }
@@ -190,7 +194,3 @@ watch(() => colorMode.value, () => {
     <div ref="chartRef" class="w-full h-full" :class="{ 'opacity-50 grayscale pointer-events-none': pending }"></div>
   </div>
 </template>
-
-<style scoped>
-/* Ensure chart container takes up space */
-</style>

@@ -40,8 +40,8 @@ const updateChart = () => {
       text: 'แบ่งตามบริษัท',
       left: 'center',
       textStyle: {
-        fontSize: 18,
-        fontWeight: 400
+        fontSize: 22,
+        fontWeight: 600
       }
     },
     tooltip: {
@@ -52,7 +52,7 @@ const updateChart = () => {
       bottom: 0,
       left: 'center',
       textStyle: {
-        fontSize: 12
+        fontSize: 14
       }
     },
     series: [
@@ -61,25 +61,27 @@ const updateChart = () => {
         type: 'pie',
         radius: ['40%', '65%'],
         center: ['50%', '50%'],
-        avoidLabelOverlap: false,
-        padAngle: 3, // <--- padAngle here
+        avoidLabelOverlap: true,
+        padAngle: 2, // <--- padAngle here
         itemStyle: {
           borderRadius: 10
         },
         label: {
           show: true,
-          position: 'outside',
-          formatter: '{b}: {c} ({d}%)'
+          position: 'inside',
+          fontSize: 12,
+          formatter: '{c}\n({d}%)',
+          color: '#fff' // White text for better contrast inside colored slices
         },
         emphasis: {
           label: {
             show: true,
-            fontSize: 16,
+            fontSize: 18,
             fontWeight: 'bold'
           }
         },
         labelLine: {
-          show: true
+          show: false
         },
         data: data.value,
         color: [
@@ -144,6 +146,3 @@ watch(() => colorMode.value, () => {
     <div ref="chartRef" class="w-full h-full" :class="{ 'opacity-50 grayscale pointer-events-none': pending }"></div>
   </div>
 </template>
-
-<style scoped>
-</style>

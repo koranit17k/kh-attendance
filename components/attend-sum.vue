@@ -36,7 +36,6 @@ const resetAndRefresh = async () => {
   range.value.start = today(getLocalTimeZone()).toString()
   range.value.end = today(getLocalTimeZone()).toString()
   calendarResetId.value++
-  await refresh()
 }
 </script>
 

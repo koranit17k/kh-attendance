@@ -7,6 +7,3 @@ const { data: count } = await useFetch('/api/counter')
     <h1>{{ count?.value ?? 0 }}</h1>
   </div>
 </template>
-
-<style>
-</style>
