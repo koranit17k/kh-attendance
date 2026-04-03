@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { CalendarDate, today, getLocalTimeZone, parseDate } from '@internationalized/date'
 
+const props = defineProps<{
+  full?: boolean
+}>()
+
 const rangeState = useState<{ start: string, end: string }>('attendance-range', () => ({
   start: today(getLocalTimeZone()).toString(),
   end: today(getLocalTimeZone()).toString()
@@ -96,7 +100,8 @@ function getColorByDate(date: Date) {
 
     <UCalendar v-model="internalRange" :key="calendarResetId"
       :default-placeholder="today(getLocalTimeZone()).subtract({ months: 1 })" :number-of-months="2" :range="true" :ui="{
-        heading: 'text-2xl font-bold text-gray-900 dark:text-white'
+        heading: 'text-2xl font-bold text-gray-900 dark:text-white',
+        grid: props.full ? 'w-full gap-y-1 gap-x-1' : 'w-fit mx-auto gap-y-1 gap-x-0'
       }" :prev-month="{ size: 'xl', variant: 'ghost', color: 'neutral' }"
       :next-month="{ size: 'xl', variant: 'ghost', color: 'neutral' }"
       :prev-year="{ size: 'xl', variant: 'ghost', color: 'neutral' }"

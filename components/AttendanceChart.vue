@@ -176,7 +176,7 @@ watch(() => colorMode.value, () => {
 </script>
 
 <template>
-  <div class="w-full h-[500px]">
+  <div class="w-full h-[600px]">
     <div v-if="pending && !data" class="flex flex-col items-center justify-center h-full space-y-4">
       <UIcon name="i-lucide-loader-2" class="w-8 h-8 animate-spin text-primary" />
       <p class="text-sm text-gray-500">กำลังโหลดกราฟ...</p>

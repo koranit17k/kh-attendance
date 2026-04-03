@@ -6,16 +6,21 @@ enter site
 :::
 ::
 
-::calendar
+::calendar{full}
 ::
 
 ::attend-sum
 ::
 
 ::u-page-section
-::attendance-chart
+:::div{class="grid grid-cols-2 gap-2 w-full"}
+  ::attendance-chart
+  ::
+  ::company-pie-chart
+  ::
+:::
 ::
-::
+
 
 ::u-page-section
 #title
