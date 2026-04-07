@@ -13,7 +13,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<style name="Crosstab 1_CH" mode="Opaque" backcolor="#F0F8FF">
+	<style name="Crosstab_CT" mode="Opaque" backcolor="#005FB3">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 			<topPen lineWidth="0.5" lineColor="#000000"/>
@@ -22,7 +22,7 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="Crosstab 1_CG" mode="Opaque" backcolor="#BFE1FF">
+	<style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 			<topPen lineWidth="0.5" lineColor="#000000"/>
@@ -31,7 +31,7 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="Crosstab 1_CT" mode="Opaque" backcolor="#005FB3">
+	<style name="Crosstab_CH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 			<topPen lineWidth="0.5" lineColor="#000000"/>
@@ -40,7 +40,7 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="Crosstab 1_CD" mode="Opaque" backcolor="#FFFFFF">
+	<style name="Crosstab_CG" mode="Opaque" backcolor="#BFE1FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 			<topPen lineWidth="0.5" lineColor="#000000"/>
@@ -250,7 +250,7 @@ ORDER BY ecom, e.scanCode]]></query>
 		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
 	</field>
-	<title height="57" splitType="Stretch">
+	<title height="34" splitType="Stretch">
 		<element kind="textField" uuid="77f91706-70bb-46b1-8780-b1005ee9bd10" x="290" y="0" width="178" height="34" fontName="Sarabun Thin" fontSize="12.0" hTextAlign="Center" vTextAlign="Middle">
 			<expression><![CDATA[$P{JASPER_REPORT}.getName()]]></expression>
 		</element>
@@ -270,7 +270,7 @@ ORDER BY ecom, e.scanCode]]></query>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 		</element>
 	</title>
-	<pageHeader height="35" splitType="Stretch">
+	<pageHeader height="15" splitType="Stretch">
 		<element kind="textField" uuid="5e3c6189-eb59-4d1a-9d7b-f41e70b82788" x="787" y="0" width="15" height="15" fontName="Sarabun Thin" fontSize="8.0" evaluationTime="Report" hTextAlign="Left">
 			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1
 ]]></printWhenExpression>
@@ -284,51 +284,52 @@ ORDER BY ecom, e.scanCode]]></query>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
 	</pageHeader>
-	<summary height="109" splitType="Stretch">
-		<element kind="crosstab" uuid="518b5fa7-9ef2-43c9-aeb4-45b20cc1b216" x="0" y="0" width="802" height="100">
+	<summary height="100" splitType="Stretch">
+		<element kind="crosstab" uuid="01fe3bdf-e6cd-43ce-b6b5-66a070d0fd51" x="0" y="0" width="802" height="100">
 			<dataset/>
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
-			<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab 1_CH"/>
-			<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab 1_CG"/>
-			<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab 1_CT"/>
-			<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab 1_CD"/>
-			<property name="com.jaspersoft.studio.unit.x" value="px"/>
+			<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
+			<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
+			<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
+			<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 			<rowGroup name="company_name" totalPosition="End" width="30">
 				<bucket class="java.lang.String">
 					<expression><![CDATA[$F{company_name}]]></expression>
 				</bucket>
-				<header mode="Opaque" style="Crosstab 1_CH">
-					<element kind="textField" uuid="ea6ca828-6b33-4dc3-a4c9-3a743448e687" x="0" y="0" width="30" height="15" fontName="Sarabun Thin" fontSize="8.0" textAdjust="StretchHeight" hTextAlign="Justified">
+				<header mode="Opaque" style="Crosstab_CH">
+					<element kind="textField" uuid="3d15edea-71ad-4cc5-933d-bbfad4092c2c" stretchType="NoStretch" x="0" y="0" width="30" height="13" markup="none" fontName="Sarabun Thin" fontSize="8.0" textAdjust="StretchHeight">
 						<expression><![CDATA[$V{company_name}]]></expression>
 					</element>
 				</header>
-				<totalHeader mode="Opaque" style="Crosstab 1_CG"/>
+				<totalHeader mode="Opaque" style="Crosstab_CT"/>
 			</rowGroup>
 			<rowGroup name="employee_name" totalPosition="End" width="30">
 				<bucket class="java.lang.String">
 					<expression><![CDATA[$F{employee_name}]]></expression>
 				</bucket>
-				<header mode="Opaque" style="Crosstab 1_CH">
-					<element kind="textField" uuid="7229fe09-6fc2-46b9-8e64-990b2648734e" x="0" y="0" width="30" height="10" fontName="Sarabun Thin" fontSize="6.0">
+				<header mode="Opaque" style="Crosstab_CH">
+					<element kind="textField" uuid="3752fb3e-babb-4ed3-8f48-488ecf9370e7" x="0" y="0" width="30" height="8" fontName="Sarabun Thin" fontSize="6.0" vTextAlign="Middle">
 						<expression><![CDATA[$V{employee_name}]]></expression>
+						<box leftPadding="2"/>
 					</element>
 				</header>
-				<totalHeader mode="Opaque" style="Crosstab 1_CT"/>
+				<totalHeader mode="Opaque" style="Crosstab_CG"/>
 			</rowGroup>
 			<columnGroup name="dateAt" totalPosition="End" height="10">
 				<bucket class="java.lang.String">
 					<expression><![CDATA[$F{dateAt}]]></expression>
 				</bucket>
-				<header mode="Opaque" style="Crosstab 1_CH">
-					<element kind="textField" uuid="08613d8f-ee0c-4afe-9a25-130380c7c087" x="0" y="0" width="24" height="10" fontName="Sarabun Thin" fontSize="6.0">
+				<header mode="Opaque" style="Crosstab_CH">
+					<element kind="textField" uuid="7b822cab-70c9-45a1-9ce5-c4995af6f919" x="0" y="0" width="22" height="10" markup="none" fontName="Sarabun Thin" fontSize="6.0">
 						<expression><![CDATA[$V{dateAt} != null
 ? $V{dateAt}.split("-")[$V{dateAt}.split("-").length - 1]
 : ""
 ]]></expression>
 					</element>
 				</header>
-				<totalHeader mode="Opaque" style="Crosstab 1_CT">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<totalHeader mode="Opaque" style="Crosstab_CT">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</totalHeader>
 			</columnGroup>
@@ -341,40 +342,52 @@ ORDER BY ecom, e.scanCode]]></query>
 			<measure name="work_minutes_MEAS" calculation="Sum" class="java.math.BigDecimal">
 				<expression><![CDATA[$F{work_minutes}]]></expression>
 			</measure>
-			<cell width="24" height="10">
-				<contents mode="Opaque" style="Crosstab 1_CD">
-					<element kind="textField" uuid="5bff2a2c-5085-482d-bc18-a42a6c303593" x="0" y="0" width="24" height="10" fontName="Sarabun Thin" fontSize="6.0" pattern="#,##0.###;(#,##0.###-)" blankWhenNull="false">
-						<expression><![CDATA[(
-  ($V{late_morning_MEAS} == null || $V{late_morning_MEAS} == 0)
-  && ($V{late_lunch_MEAS} == null || $V{late_lunch_MEAS} == 0)
-)
-? ""
-:
-(
-  ($V{late_morning_MEAS} == null || $V{late_morning_MEAS} == 0 ? "" : $V{late_morning_MEAS})
-  + " / " +
-  ($V{late_lunch_MEAS} == null || $V{late_lunch_MEAS} == 0 ? "" : $V{late_lunch_MEAS})
-)
-]]></expression>
+			<measure name="status" class="java.lang.String">
+				<expression><![CDATA[$F{status}]]></expression>
+			</measure>
+			<cell width="22" height="8">
+				<contents mode="Opaque" style="Crosstab_CD">
+					<element kind="textField" uuid="43c3c611-bfa7-4fdc-b3c6-4b07c0b9dd9f" x="0" y="0" width="22" height="8" fontName="Sarabun Thin" fontSize="4.0" hTextAlign="Center" vTextAlign="Middle">
+						<expression><![CDATA["Absent".equals($V{status})
+? "x"
+: (
+    (
+      ($V{late_morning_MEAS} == null || $V{late_morning_MEAS} == 0)
+      && ($V{late_lunch_MEAS} == null || $V{late_lunch_MEAS} == 0)
+    )
+    ? ""
+    : (
+        ($V{late_morning_MEAS} == null || $V{late_morning_MEAS} == 0 ? "" : $V{late_morning_MEAS})
+        + " / " +
+        ($V{late_lunch_MEAS} == null || $V{late_lunch_MEAS} == 0 ? "" : $V{late_lunch_MEAS})
+      )
+  )]]></expression>
 					</element>
 				</contents>
 			</cell>
-			<cell width="5" height="10" columnTotalGroup="dateAt">
-				<contents mode="Opaque" style="Crosstab 1_CT"/>
+			<cell width="5" height="8" columnTotalGroup="dateAt">
+				<contents mode="Opaque" style="Crosstab_CT">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</contents>
 			</cell>
-			<cell width="24" height="15" rowTotalGroup="company_name">
-				<contents mode="Opaque" style="Crosstab 1_CG"/>
+			<cell width="22" height="7" rowTotalGroup="company_name">
+				<contents mode="Opaque" style="Crosstab_CT">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</contents>
 			</cell>
-			<cell width="5" height="15" rowTotalGroup="company_name" columnTotalGroup="dateAt">
-				<contents mode="Opaque" style="Crosstab 1_CT"/>
-			</cell>
-			<cell width="24" height="5" rowTotalGroup="employee_name">
-				<contents mode="Opaque" style="Crosstab 1_CT">
+			<cell width="5" height="7" rowTotalGroup="company_name" columnTotalGroup="dateAt">
+				<contents mode="Opaque" style="Crosstab_CT">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</contents>
 			</cell>
+			<cell width="22" height="5" rowTotalGroup="employee_name">
+				<contents mode="Opaque" style="Crosstab_CG"/>
+			</cell>
 			<cell width="5" height="5" rowTotalGroup="employee_name" columnTotalGroup="dateAt">
-				<contents mode="Opaque" style="Crosstab 1_CT"/>
+				<contents mode="Opaque" style="Crosstab_CT">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</contents>
 			</cell>
 		</element>
 	</summary>

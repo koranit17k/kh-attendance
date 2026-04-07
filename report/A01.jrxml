@@ -477,13 +477,6 @@ $F{late_lunch_minutes}.intValue()
 				<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				<box rightPadding="6"/>
 			</element>
-			<element kind="textField" uuid="153fe644-bc72-4a47-8771-a81c2f9cdd0d" x="120" y="0" width="56" height="16" fontName="Sarabun Thin" blankWhenNull="true" vTextAlign="Bottom">
-				<expression><![CDATA[$F{dateAt}]]></expression>
-				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a733f1dc-c061-4ffd-8481-12d493e35cd1"/>
-				<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				<box leftPadding="5"/>
-			</element>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</band>
 	</detail>
