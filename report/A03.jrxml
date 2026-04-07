@@ -49,15 +49,16 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<parameter name="pYear" class="java.lang.String">
-		<defaultValueExpression><![CDATA[2025]]></defaultValueExpression>
+	<parameter name="startDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2025-12-01"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="pMonth" class="java.lang.String">
-		<defaultValueExpression><![CDATA[11]]></defaultValueExpression>
+	<parameter name="endDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2025-12-31"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="comCode" class="java.lang.String"/>
 	<query language="SQL"><![CDATA[SELECT
     v.*,
-    e.comCode AS ecom,
+    e.comCode AS comCode,
     c.comCode AS ccom,
     e.name    AS employee_name,
     c.comName AS company_name,
@@ -68,12 +69,10 @@ LEFT JOIN employee e
    AND v.empCode = e.empCode
 LEFT JOIN company c
     ON e.comCode = c.comCode
-WHERE STR_TO_DATE(v.dateAt, '%Y-%m-%d') BETWEEN
-      STR_TO_DATE(CONCAT($P!{pYear}, '-', LPAD($P!{pMonth},2,'0'), '-01'), '%Y-%m-%d')
-  AND LAST_DAY(
-      STR_TO_DATE(CONCAT($P!{pYear}, '-', LPAD($P!{pMonth},2,'0'), '-01'), '%Y-%m-%d')
-  )
-ORDER BY ecom, e.scanCode]]></query>
+WHERE e.comCode = $P{comCode} and STR_TO_DATE(v.dateAt, '%Y-%m-%d') BETWEEN
+      STR_TO_DATE($P{startDate}, '%Y-%m-%d')
+  AND STR_TO_DATE($P{endDate}, '%Y-%m-%d')
+ORDER BY e.comCode, e.scanCode]]></query>
 	<field name="comCode" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="comCode"/>
 		<property name="com.jaspersoft.studio.field.label" value="comCode"/>
@@ -222,9 +221,9 @@ ORDER BY ecom, e.scanCode]]></query>
 		<property name="com.jaspersoft.studio.field.label" value="approved_at"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
-	<field name="ecom" class="java.lang.String">
+	<field name="COLUMN_27" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="comCode"/>
-		<property name="com.jaspersoft.studio.field.label" value="ecom"/>
+		<property name="com.jaspersoft.studio.field.label" value="comCode"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
 	</field>
 	<field name="ccom" class="java.lang.String">
@@ -250,13 +249,16 @@ ORDER BY ecom, e.scanCode]]></query>
 		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
 	</field>
-	<title height="34" splitType="Stretch">
-		<element kind="textField" uuid="77f91706-70bb-46b1-8780-b1005ee9bd10" x="290" y="0" width="178" height="34" fontName="Sarabun Thin" fontSize="12.0" hTextAlign="Center" vTextAlign="Middle">
+	<title height="30" splitType="Stretch">
+		<element kind="textField" uuid="77f91706-70bb-46b1-8780-b1005ee9bd10" x="290" y="0" width="178" height="20" fontName="Sarabun Thin" fontSize="12.0" hTextAlign="Center" vTextAlign="Middle">
 			<expression><![CDATA[$P{JASPER_REPORT}.getName()]]></expression>
 		</element>
-		<element kind="textField" uuid="9174d50f-387b-4cd6-b113-174c230d209a" x="620" y="2" width="100" height="30">
-			<expression><![CDATA["ประจำเดือน " + $P{pMonth} + " / " + $P{pYear}
-]]></expression>
+		<element kind="textField" uuid="9174d50f-387b-4cd6-b113-174c230d209a" x="660" y="0" width="90" height="30">
+			<expression><![CDATA[new java.text.SimpleDateFormat("d MMMM yyyy", new java.util.Locale("th", "TH"))
+    .format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($P{startDate}))
++ " ถึง " 
++ new java.text.SimpleDateFormat("d MMMM yyyy", new java.util.Locale("th", "TH"))
+    .format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($P{endDate}))]]></expression>
 		</element>
 		<element kind="staticText" uuid="4ea45d9c-2f31-4032-ab43-856f8f0ddf8b" x="1" y="0" width="18" height="20" fontName="Sarabun Light" fontSize="7.0">
 			<text><![CDATA[A03]]></text>
@@ -268,6 +270,9 @@ ORDER BY ecom, e.scanCode]]></query>
 		<element kind="textField" uuid="8f6f3eb8-4da9-4239-aee1-c1074b26b788" x="758" y="0" width="25" height="20" fontName="Sarabun Thin" fontSize="8.0" hTextAlign="Right">
 			<expression><![CDATA[$V{PAGE_NUMBER}+" /"]]></expression>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="textField" uuid="4ff9c8e7-d9bf-44c2-8482-b93d9a702110" x="598" y="0" width="70" height="30">
+			<expression><![CDATA["ประจำเดือน : "]]></expression>
 		</element>
 	</title>
 	<pageHeader height="15" splitType="Stretch">
@@ -327,6 +332,7 @@ ORDER BY ecom, e.scanCode]]></query>
 ? $V{dateAt}.split("-")[$V{dateAt}.split("-").length - 1]
 : ""
 ]]></expression>
+						<box leftPadding="2"/>
 					</element>
 				</header>
 				<totalHeader mode="Opaque" style="Crosstab_CT">
