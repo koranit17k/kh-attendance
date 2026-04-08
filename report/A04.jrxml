@@ -2,8 +2,9 @@
 <jasperReport name="รายงานวิเคราะห์พนักงาน" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8d4f381e-dcc0-4411-a9b1-6b732bc634e8" floatColumnFooter="true">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="payroll"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<parameter name="pYear" class="java.lang.Integer"/>
-	<parameter name="pMonth" class="java.lang.Integer"/>
+	<parameter name="startDate" class="java.lang.String"/>
+	<parameter name="endDate" class="java.lang.String"/>
+	<parameter name="comCode" class="java.lang.String"/>
 	<query language="sql"><![CDATA[SELECT
 	v.*,
 	e.scanCode ,
@@ -44,11 +45,12 @@ JOIN employee e
 	AND v.empCode = e.empCode
 	-- LEFT JOIN company c
 	--     ON c.comCode = e.comCode
-WHERE
-	    YEAR(STR_TO_DATE(v.dateAt,'%Y-%m-%d'))  = $P{pYear}
-	  AND MONTH(STR_TO_DATE(v.dateAt,'%Y-%m-%d')) = $P{pMonth} 
+WHERE v.comCode = $P{comCode}
+  AND STR_TO_DATE(v.dateAt, '%Y-%m-%d')
+      BETWEEN STR_TO_DATE($P{startDate}, '%Y-%m-%d')
+          AND STR_TO_DATE($P{endDate}, '%Y-%m-%d')
 -- 	ORDER BY v.dateAt, e.scanCode
-group by e.scanCode  ]]></query>
+group by e.empCode ]]></query>
 	<field name="comCode" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="comCode"/>
 		<property name="com.jaspersoft.studio.field.label" value="comCode"/>
@@ -269,18 +271,8 @@ $F{sum_late_min}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
 		<expression><![CDATA[$F{working_days}.intValue() == 0 ? 0 :
 $F{sum_work_min}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
 	</variable>
-	<variable name="OT เฉลี่ย" resetType="None" class="java.lang.Double">
-		<expression><![CDATA[$F{working_days}.intValue() == 0 ? 0 :
-$F{sum_ot_min}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
-	</variable>
 	<background splitType="Stretch"/>
 	<title height="55" splitType="Stretch">
-		<element kind="textField" uuid="ea679eea-4712-4119-8e5e-00e0c78b0333" x="270" y="40" width="72" height="15" fontName="Sarabun Thin" hTextAlign="Center">
-			<expression><![CDATA[new java.text.DateFormatSymbols(new java.util.Locale("th","TH"))
-    .getMonths()[$P{pMonth} - 1]
-+ " " + $P{pYear}
-]]></expression>
-		</element>
 		<element kind="textField" uuid="24149f4c-788a-4f16-9627-03b080f3ad2b" x="539" y="0" width="15" height="20" fontName="Sarabun Thin" fontSize="8.0" evaluationTime="Report" hTextAlign="Left">
 			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -314,71 +306,95 @@ $F{sum_ot_min}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
 	</pageHeader>
-	<columnHeader height="14" splitType="Stretch">
-		<element kind="staticText" uuid="fe8bb510-877e-4c66-b63b-bedb0801b597" x="60" y="0" width="70" height="14" fontName="Sarabun Thin">
+	<columnHeader height="19" splitType="Stretch">
+		<element kind="staticText" uuid="fe8bb510-877e-4c66-b63b-bedb0801b597" x="20" y="0" width="70" height="14" fontName="Sarabun Thin">
 			<text><![CDATA[ชื่อ]]></text>
 		</element>
-		<element kind="staticText" uuid="8dba5e9e-efb2-4676-a77c-b1c6dc5d8e8a" x="0" y="0" width="60" height="14" fontName="Sarabun Thin">
+		<element kind="staticText" uuid="8dba5e9e-efb2-4676-a77c-b1c6dc5d8e8a" x="0" y="0" width="20" height="14" fontName="Sarabun Thin">
 			<text><![CDATA[รหัสพนักงาน]]></text>
 		</element>
-		<element kind="staticText" uuid="fe1be7a2-3179-4371-8e76-ed640bb21df8" x="130" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+		<element kind="staticText" uuid="fe1be7a2-3179-4371-8e76-ed640bb21df8" x="90" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[เต็มวัน]]></text>
 		</element>
-		<element kind="staticText" uuid="d520d087-0a13-47c2-8b59-de2b3967e9a2" x="160" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+		<element kind="staticText" uuid="d520d087-0a13-47c2-8b59-de2b3967e9a2" x="120" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[ครึ่งวัน]]></text>
 		</element>
-		<element kind="staticText" uuid="f7588a16-c563-4373-a47d-3700faaa36d2" x="190" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+		<element kind="staticText" uuid="f7588a16-c563-4373-a47d-3700faaa36d2" x="150" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[ขาด]]></text>
 		</element>
-		<element kind="staticText" uuid="0647e7a5-9fb4-482e-b680-24cf47fafba7" x="220" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+		<element kind="staticText" uuid="0647e7a5-9fb4-482e-b680-24cf47fafba7" x="280" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[สาย]]></text>
 		</element>
-		<element kind="staticText" uuid="406c472b-2053-4bc3-9887-bb9d1b93e435" x="414" y="0" width="41" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+		<element kind="staticText" uuid="406c472b-2053-4bc3-9887-bb9d1b93e435" x="464" y="0" width="41" height="14" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[สายเฉลี่ย]]></text>
 		</element>
-		<element kind="staticText" uuid="666b7c2d-ad5f-4bfd-8945-4fbda5343aab" x="455" y="0" width="50" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+		<element kind="staticText" uuid="666b7c2d-ad5f-4bfd-8945-4fbda5343aab" x="505" y="0" width="50" height="14" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[ทำงานเฉลี่ย]]></text>
 		</element>
-		<element kind="staticText" uuid="7ffa2c1c-3e1d-4d7b-a51d-c82484ddf4ef" x="505" y="0" width="50" height="14" fontName="Sarabun Thin" hTextAlign="Right">
-			<text><![CDATA[OT เฉลี่ย]]></text>
+		<element kind="staticText" uuid="7ffa2c1c-3e1d-4d7b-a51d-c82484ddf4ef" x="310" y="0" width="50" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+			<text><![CDATA[OT]]></text>
+		</element>
+		<element kind="staticText" uuid="72ed2a60-4a32-499a-991f-938d6646bf40" x="250" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+			<text><![CDATA[เวลาทำงานทั้งหมด]]></text>
+		</element>
+		<element kind="staticText" uuid="a320dedf-2eb4-44ce-beec-a6f0fe01d68f" x="423" y="0" width="41" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+			<text><![CDATA[เข้างานเฉลี่ย]]></text>
+		</element>
+		<element kind="staticText" uuid="c5c56e91-b7a1-4e68-b78e-84fe121d7f1c" x="180" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+			<text><![CDATA[สายครั้ง]]></text>
+		</element>
+		<element kind="staticText" uuid="2fd2a3b9-82cc-4ba9-b461-501b1c411e1f" x="210" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+			<text><![CDATA[ไม่สแกนพักเที่ยง]]></text>
 		</element>
 	</columnHeader>
 	<detail>
-		<band height="16" splitType="Stretch">
-			<element kind="textField" uuid="b93e7a28-b901-495b-b96e-ec5c97bd9fec" x="0" y="0" width="60" height="16" fontName="Sarabun Thin">
-				<expression><![CDATA[$F{scanCode}]]></expression>
+		<band height="21" splitType="Stretch">
+			<element kind="textField" uuid="b93e7a28-b901-495b-b96e-ec5c97bd9fec" x="0" y="0" width="20" height="16" fontName="Sarabun Thin">
+				<expression><![CDATA[$F{empCode}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
-			<element kind="textField" uuid="6d0f03bc-1c0d-47fb-9413-8c88f6fe3022" x="60" y="0" width="70" height="16" fontName="Sarabun Thin">
+			<element kind="textField" uuid="6d0f03bc-1c0d-47fb-9413-8c88f6fe3022" x="20" y="0" width="70" height="16" fontName="Sarabun Thin">
 				<expression><![CDATA[$F{employee_name}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
-			<element kind="textField" uuid="bdc29fcb-dd8e-4388-9892-8c67fc90cc33" x="130" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+			<element kind="textField" uuid="bdc29fcb-dd8e-4388-9892-8c67fc90cc33" x="90" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
 				<expression><![CDATA[$F{full_day_cnt}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
-			<element kind="textField" uuid="8350291a-11c9-4fb3-a8ef-64d68e0c94fc" x="220" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+			<element kind="textField" uuid="8350291a-11c9-4fb3-a8ef-64d68e0c94fc" x="280" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
 				<expression><![CDATA[$F{total_late}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
-			<element kind="textField" uuid="2eaf5fdc-7ca8-461e-ab25-720718d4deaf" x="160" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+			<element kind="textField" uuid="2eaf5fdc-7ca8-461e-ab25-720718d4deaf" x="120" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
 				<expression><![CDATA[$F{half_day_cnt}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
-			<element kind="textField" uuid="8b27beef-3760-46a6-a19c-d61c6155d901" x="190" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+			<element kind="textField" uuid="8b27beef-3760-46a6-a19c-d61c6155d901" x="150" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
 				<expression><![CDATA[$F{absent_cnt}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
-			<element kind="textField" uuid="555e0355-665c-4fdf-8e61-73d0258614b3" x="414" y="0" width="41" height="16" fontName="Sarabun Thin" pattern="#,##0" hTextAlign="Right">
+			<element kind="textField" uuid="555e0355-665c-4fdf-8e61-73d0258614b3" x="464" y="0" width="41" height="16" fontName="Sarabun Thin" pattern="#,##0" hTextAlign="Right">
 				<expression><![CDATA[$V{สายเฉลี่ย}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
-			<element kind="textField" uuid="b007ccb8-8623-43ed-b0cf-ef5f558babb2" x="455" y="0" width="50" height="16" fontName="Sarabun Thin" pattern="#,##0" hTextAlign="Right">
+			<element kind="textField" uuid="b007ccb8-8623-43ed-b0cf-ef5f558babb2" x="505" y="0" width="50" height="16" fontName="Sarabun Thin" pattern="#,##0" hTextAlign="Right">
 				<expression><![CDATA[$V{ทำงานเฉลี่ย}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
-			<element kind="textField" uuid="602c8587-ca2c-4457-8865-5451d9db239a" x="505" y="0" width="50" height="16" fontName="Sarabun Thin" pattern="#,##0" hTextAlign="Right">
-				<expression><![CDATA[$V{OT เฉลี่ย}]]></expression>
+			<element kind="textField" uuid="602c8587-ca2c-4457-8865-5451d9db239a" x="310" y="0" width="50" height="16" fontName="Sarabun Thin" pattern="#,##0" hTextAlign="Right">
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
+			</element>
+			<element kind="textField" uuid="06076c54-014c-4191-a124-7739d5543d32" x="250" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
+			</element>
+			<element kind="textField" uuid="2f3f64cd-adbc-49ac-8568-dec77f2b3cb4" x="423" y="0" width="41" height="16" fontName="Sarabun Thin" pattern="#,##0" hTextAlign="Right">
+				<expression><![CDATA[$V{สายเฉลี่ย}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
+			</element>
+			<element kind="textField" uuid="0e3fbb89-464a-466e-8402-074526aeaf8f" x="180" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
+			</element>
+			<element kind="textField" uuid="addd6c6c-d601-425f-919c-5e677414a10b" x="210" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
 		</band>
