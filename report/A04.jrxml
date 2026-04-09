@@ -34,16 +34,18 @@
         COALESCE(v.late_lunch_minutes,0)
     ) AS sum_late_min,
     -- รวมเวลาทำงาน/OT (นาที)
-    SUM(COALESCE(v.work_minutes,0)) AS sum_work_min,
-    SUM(COALESCE(v.ot_total_minutes,0))   AS sum_ot_min,
+    SUM(COALESCE(v.work_minutes,0)) AS total_workmin,
+    SUM(COALESCE(v.ot_total_minutes,0))   AS total_ot,
     -- รวมเวลาเข้างาน (นาที) เฉลี่ยจากวันทำงานจริงเท่านั้น
+CAST(
     SUM(
         CASE
-            WHEN v.status IN ('FullDay','HalfDay')
-            THEN COALESCE(v.morning,0)
+            WHEN v.status IN ('FullDay','HalfDay') AND v.morning IS NOT NULL
+            THEN TIME_TO_SEC(v.morning) / 60
             ELSE 0
         END
-    ) AS sum_checkin_min,
+    ) AS SIGNED
+) AS sum_checkin_min,
 SUM(
     CASE
         WHEN v.status IN ('FullDay','HalfDay')
@@ -273,15 +275,15 @@ group by e.empCode ]]></query>
 		<property name="com.jaspersoft.studio.field.name" value="sum_late_min"/>
 		<property name="com.jaspersoft.studio.field.label" value="sum_late_min"/>
 	</field>
-	<field name="sum_work_min" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.name" value="sum_work_min"/>
-		<property name="com.jaspersoft.studio.field.label" value="sum_work_min"/>
+	<field name="total_workmin" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_workmin"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_workmin"/>
 	</field>
-	<field name="sum_ot_min" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.name" value="sum_ot_min"/>
-		<property name="com.jaspersoft.studio.field.label" value="sum_ot_min"/>
+	<field name="total_ot" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_ot"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_ot"/>
 	</field>
-	<field name="sum_checkin_min" class="java.lang.Double">
+	<field name="sum_checkin_min" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="sum_checkin_min"/>
 		<property name="com.jaspersoft.studio.field.label" value="sum_checkin_min"/>
 	</field>
@@ -293,9 +295,14 @@ group by e.empCode ]]></query>
 		<property name="com.jaspersoft.studio.field.name" value="late_cnt"/>
 		<property name="com.jaspersoft.studio.field.label" value="late_cnt"/>
 	</field>
-	<variable name="เข้างานเฉลี่ย" resetType="None" class="java.lang.Double">
-		<expression><![CDATA[$F{working_days}.intValue() == 0 ? 0 :
-$F{sum_checkin_min}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
+	<variable name="เข้างานเฉลี่ย" resetType="None" class="java.lang.String">
+		<expression><![CDATA[$F{working_days}.intValue() == 0
+? ""
+: String.format(
+    "%02d:%02d",
+    ((int)Math.round($F{sum_checkin_min}.doubleValue() / $F{working_days}.doubleValue())) / 60,
+    ((int)Math.round($F{sum_checkin_min}.doubleValue() / $F{working_days}.doubleValue())) % 60
+)]]></expression>
 	</variable>
 	<variable name="สายเฉลี่ย" resetType="None" class="java.lang.Double">
 		<expression><![CDATA[$F{working_days}.intValue() == 0 ? 0 :
@@ -303,7 +310,7 @@ $F{sum_late_min}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
 	</variable>
 	<variable name="ทำงานเฉลี่ย" resetType="None" class="java.lang.Double">
 		<expression><![CDATA[$F{working_days}.intValue() == 0 ? 0 :
-$F{sum_work_min}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
+$F{total_workmin}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
 	</variable>
 	<background splitType="Stretch"/>
 	<title height="30" splitType="Stretch">
@@ -355,16 +362,16 @@ $F{sum_work_min}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
 		<element kind="staticText" uuid="8dba5e9e-efb2-4676-a77c-b1c6dc5d8e8a" x="0" y="0" width="20" height="14" fontName="Sarabun Thin">
 			<text><![CDATA[รหัสพนักงาน]]></text>
 		</element>
-		<element kind="staticText" uuid="fe1be7a2-3179-4371-8e76-ed640bb21df8" x="90" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+		<element kind="staticText" uuid="fe1be7a2-3179-4371-8e76-ed640bb21df8" x="184" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[เต็มวัน]]></text>
 		</element>
-		<element kind="staticText" uuid="d520d087-0a13-47c2-8b59-de2b3967e9a2" x="120" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+		<element kind="staticText" uuid="d520d087-0a13-47c2-8b59-de2b3967e9a2" x="214" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[ครึ่งวัน]]></text>
 		</element>
-		<element kind="staticText" uuid="f7588a16-c563-4373-a47d-3700faaa36d2" x="150" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+		<element kind="staticText" uuid="f7588a16-c563-4373-a47d-3700faaa36d2" x="244" y="0" width="24" height="14" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[ขาด]]></text>
 		</element>
-		<element kind="staticText" uuid="0647e7a5-9fb4-482e-b680-24cf47fafba7" x="280" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+		<element kind="staticText" uuid="0647e7a5-9fb4-482e-b680-24cf47fafba7" x="356" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[สาย]]></text>
 		</element>
 		<element kind="staticText" uuid="406c472b-2053-4bc3-9887-bb9d1b93e435" x="464" y="0" width="41" height="14" fontName="Sarabun Thin" hTextAlign="Right">
@@ -373,17 +380,17 @@ $F{sum_work_min}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
 		<element kind="staticText" uuid="666b7c2d-ad5f-4bfd-8945-4fbda5343aab" x="505" y="0" width="50" height="14" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[ทำงานเฉลี่ย]]></text>
 		</element>
-		<element kind="staticText" uuid="7ffa2c1c-3e1d-4d7b-a51d-c82484ddf4ef" x="310" y="0" width="50" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+		<element kind="staticText" uuid="7ffa2c1c-3e1d-4d7b-a51d-c82484ddf4ef" x="386" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[OT]]></text>
 		</element>
 		<element kind="staticText" uuid="a320dedf-2eb4-44ce-beec-a6f0fe01d68f" x="423" y="0" width="41" height="14" fontName="Sarabun Thin" hTextAlign="Right">
-			<text><![CDATA[เข้างานเฉลี่ย]]></text>
+			<text><![CDATA[เข้าเฉลี่ย]]></text>
 		</element>
-		<element kind="staticText" uuid="c5c56e91-b7a1-4e68-b78e-84fe121d7f1c" x="180" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+		<element kind="staticText" uuid="c5c56e91-b7a1-4e68-b78e-84fe121d7f1c" x="274" y="0" width="36" height="14" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[สายครั้ง]]></text>
 		</element>
-		<element kind="staticText" uuid="2fd2a3b9-82cc-4ba9-b461-501b1c411e1f" x="210" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
-			<text><![CDATA[ไม่สแกนพักเที่ยง]]></text>
+		<element kind="staticText" uuid="2fd2a3b9-82cc-4ba9-b461-501b1c411e1f" x="310" y="0" width="46" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+			<text><![CDATA[ไม่พักเที่ยง]]></text>
 		</element>
 	</columnHeader>
 	<detail>
@@ -396,45 +403,55 @@ $F{sum_work_min}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
 				<expression><![CDATA[$F{employee_name}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
-			<element kind="textField" uuid="bdc29fcb-dd8e-4388-9892-8c67fc90cc33" x="90" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+			<element kind="textField" uuid="bdc29fcb-dd8e-4388-9892-8c67fc90cc33" x="184" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+				<printWhenExpression><![CDATA[$F{full_day_cnt} != null && $F{full_day_cnt}.compareTo(java.math.BigDecimal.ZERO) > 0]]></printWhenExpression>
 				<expression><![CDATA[$F{full_day_cnt}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
-			<element kind="textField" uuid="8350291a-11c9-4fb3-a8ef-64d68e0c94fc" x="280" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+			<element kind="textField" uuid="8350291a-11c9-4fb3-a8ef-64d68e0c94fc" x="356" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+				<printWhenExpression><![CDATA[$F{total_late} != null && $F{total_late}.compareTo(java.math.BigDecimal.ZERO) > 0]]></printWhenExpression>
 				<expression><![CDATA[$F{total_late}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
-			<element kind="textField" uuid="2eaf5fdc-7ca8-461e-ab25-720718d4deaf" x="120" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+			<element kind="textField" uuid="2eaf5fdc-7ca8-461e-ab25-720718d4deaf" x="214" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+				<printWhenExpression><![CDATA[$F{half_day_cnt} != null && $F{half_day_cnt}.compareTo(java.math.BigDecimal.ZERO) > 0]]></printWhenExpression>
 				<expression><![CDATA[$F{half_day_cnt}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
-			<element kind="textField" uuid="8b27beef-3760-46a6-a19c-d61c6155d901" x="150" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+			<element kind="textField" uuid="8b27beef-3760-46a6-a19c-d61c6155d901" x="244" y="0" width="24" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+				<printWhenExpression><![CDATA[$F{absent_cnt} != null && $F{absent_cnt}.compareTo(java.math.BigDecimal.ZERO) > 0]]></printWhenExpression>
 				<expression><![CDATA[$F{absent_cnt}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
 			<element kind="textField" uuid="555e0355-665c-4fdf-8e61-73d0258614b3" x="464" y="0" width="41" height="16" fontName="Sarabun Thin" pattern="#,##0" hTextAlign="Right">
+				<printWhenExpression><![CDATA[$V{สายเฉลี่ย} >=1]]></printWhenExpression>
 				<expression><![CDATA[$V{สายเฉลี่ย}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
 			<element kind="textField" uuid="b007ccb8-8623-43ed-b0cf-ef5f558babb2" x="505" y="0" width="50" height="16" fontName="Sarabun Thin" pattern="#,##0" hTextAlign="Right">
+				<printWhenExpression><![CDATA[$V{ทำงานเฉลี่ย}>=1]]></printWhenExpression>
 				<expression><![CDATA[$V{ทำงานเฉลี่ย}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
-			<element kind="textField" uuid="602c8587-ca2c-4457-8865-5451d9db239a" x="310" y="0" width="50" height="16" fontName="Sarabun Thin" pattern="#,##0" hTextAlign="Right">
-				<expression><![CDATA[$F{sum_ot_min}]]></expression>
+			<element kind="textField" uuid="602c8587-ca2c-4457-8865-5451d9db239a" x="386" y="0" width="30" height="16" fontName="Sarabun Thin" pattern="#,##0" hTextAlign="Right">
+				<printWhenExpression><![CDATA[$F{total_ot} != null && $F{total_ot}.compareTo(java.math.BigDecimal.ZERO) > 0]]></printWhenExpression>
+				<expression><![CDATA[$F{total_ot}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
 			<element kind="textField" uuid="2f3f64cd-adbc-49ac-8568-dec77f2b3cb4" x="423" y="0" width="41" height="16" fontName="Sarabun Thin" pattern="#,##0.00" hTextAlign="Right">
 				<expression><![CDATA[$V{เข้างานเฉลี่ย}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
-			<element kind="textField" uuid="0e3fbb89-464a-466e-8402-074526aeaf8f" x="180" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+			<element kind="textField" uuid="0e3fbb89-464a-466e-8402-074526aeaf8f" x="274" y="0" width="36" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+				<printWhenExpression><![CDATA[$F{total_late} != null && $F{total_late}.compareTo(java.math.BigDecimal.ZERO) > 0]]></printWhenExpression>
 				<expression><![CDATA[$F{late_cnt}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
-			<element kind="textField" uuid="addd6c6c-d601-425f-919c-5e677414a10b" x="210" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+			<element kind="textField" uuid="addd6c6c-d601-425f-919c-5e677414a10b" x="310" y="0" width="46" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+				<printWhenExpression><![CDATA[$F{missing_lunch_cnt} != null && $F{missing_lunch_cnt}.compareTo(java.math.BigDecimal.ZERO) > 0]]></printWhenExpression>
 				<expression><![CDATA[$F{missing_lunch_cnt}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
+				<box rightPadding="13"/>
 			</element>
 		</band>
 	</detail>
