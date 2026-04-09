@@ -11,6 +11,7 @@
 	<parameter name="comCode" class="java.lang.String">
 		<defaultValueExpression><![CDATA["01"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="report" class="java.lang.String"/>
 	<query language="sql"><![CDATA[SELECT
 	v.*,
 	e.scanCode ,
@@ -26,7 +27,7 @@
 	SUM(v.status = 'HalfDay') AS half_day_cnt,
 	SUM(v.status = 'Absent') AS absent_cnt,
 	SUM(v.late_morning_minutes + v.late_lunch_minutes ) as total_late,
-	    SUM(v.status IN ('FullDay','HalfDay')) AS working_days,
+	 SUM(v.status IN ('FullDay','HalfDay')) AS working_days,
     -- รวมสาย (นาที)
     SUM(
         COALESCE(v.late_morning_minutes,0) +
@@ -42,7 +43,26 @@
             THEN COALESCE(v.morning,0)
             ELSE 0
         END
-    ) AS sum_checkin_min
+    ) AS sum_checkin_min,
+SUM(
+    CASE
+        WHEN v.status IN ('FullDay','HalfDay')
+         AND (v.lunch_in IS NULL OR v.lunch_out IS NULL)
+        THEN 1
+        ELSE 0
+    END
+) AS missing_lunch_cnt,
+SUM(
+    CASE
+        WHEN v.status IN ('FullDay','HalfDay')
+         AND (
+              COALESCE(v.late_morning_minutes, 0) > 0
+              OR COALESCE(v.late_lunch_minutes, 0) > 0
+         )
+        THEN 1
+        ELSE 0
+    END
+) AS late_cnt
 	FROM
 	attendance v
 JOIN employee e
@@ -265,6 +285,14 @@ group by e.empCode ]]></query>
 		<property name="com.jaspersoft.studio.field.name" value="sum_checkin_min"/>
 		<property name="com.jaspersoft.studio.field.label" value="sum_checkin_min"/>
 	</field>
+	<field name="missing_lunch_cnt" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="missing_lunch_cnt"/>
+		<property name="com.jaspersoft.studio.field.label" value="missing_lunch_cnt"/>
+	</field>
+	<field name="late_cnt" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="late_cnt"/>
+		<property name="com.jaspersoft.studio.field.label" value="late_cnt"/>
+	</field>
 	<variable name="เข้างานเฉลี่ย" resetType="None" class="java.lang.Double">
 		<expression><![CDATA[$F{working_days}.intValue() == 0 ? 0 :
 $F{sum_checkin_min}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
@@ -287,9 +315,6 @@ $F{sum_work_min}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
 			<expression><![CDATA[$V{PAGE_NUMBER}+" /"]]></expression>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 		</element>
-		<element kind="staticText" uuid="9ff5e510-7a40-42ab-b6ef-244d2336a089" x="0" y="0" width="18" height="20" fontName="Sarabun Light" fontSize="7.0">
-			<text><![CDATA[A04]]></text>
-		</element>
 		<element kind="textField" uuid="17784336-88d8-42ba-b469-c83e54f831d8" x="191" y="0" width="178" height="20" fontName="Sarabun Thin" fontSize="12.0" hTextAlign="Center" vTextAlign="Middle">
 			<expression><![CDATA[$P{JASPER_REPORT}.getName()]]></expression>
 		</element>
@@ -302,6 +327,11 @@ $F{sum_work_min}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
 + " ถึง " 
 + new java.text.SimpleDateFormat("d MMMM yyyy", new java.util.Locale("th", "TH"))
     .format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($P{endDate}))]]></expression>
+		</element>
+		<element kind="textField" uuid="94eb1c82-1b80-4f9b-b87b-9bc15b4e6375" x="0" y="0" width="40" height="14" fontName="Sarabun Light" fontSize="7.0" blankWhenNull="true">
+			<expression><![CDATA["[" + $P{report} + "]"]]></expression>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
 	</title>
 	<pageHeader height="15" splitType="Stretch">
@@ -345,9 +375,6 @@ $F{sum_work_min}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
 		</element>
 		<element kind="staticText" uuid="7ffa2c1c-3e1d-4d7b-a51d-c82484ddf4ef" x="310" y="0" width="50" height="14" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[OT]]></text>
-		</element>
-		<element kind="staticText" uuid="72ed2a60-4a32-499a-991f-938d6646bf40" x="250" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
-			<text><![CDATA[เวลาทำงานทั้งหมด]]></text>
 		</element>
 		<element kind="staticText" uuid="a320dedf-2eb4-44ce-beec-a6f0fe01d68f" x="423" y="0" width="41" height="14" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[เข้างานเฉลี่ย]]></text>
@@ -397,18 +424,16 @@ $F{sum_work_min}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
 				<expression><![CDATA[$F{sum_ot_min}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
-			<element kind="textField" uuid="06076c54-014c-4191-a124-7739d5543d32" x="250" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
-				<expression><![CDATA[$F{sum_work_min}]]></expression>
-				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
-			</element>
 			<element kind="textField" uuid="2f3f64cd-adbc-49ac-8568-dec77f2b3cb4" x="423" y="0" width="41" height="16" fontName="Sarabun Thin" pattern="#,##0.00" hTextAlign="Right">
 				<expression><![CDATA[$V{เข้างานเฉลี่ย}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
 			<element kind="textField" uuid="0e3fbb89-464a-466e-8402-074526aeaf8f" x="180" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+				<expression><![CDATA[$F{late_cnt}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
 			<element kind="textField" uuid="addd6c6c-d601-425f-919c-5e677414a10b" x="210" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+				<expression><![CDATA[$F{missing_lunch_cnt}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
 		</band>

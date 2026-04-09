@@ -12,6 +12,7 @@
 	<parameter name="comCode" class="java.lang.String">
 		<defaultValueExpression><![CDATA["01"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="report" class="java.lang.String"/>
 	<query language="SQL"><![CDATA[SELECT v.*,
        e.comCode AS ecom,
        c.comCode AS ccom,
@@ -353,9 +354,6 @@ new java.text.SimpleDateFormat("dd/MM/yyyy")
 	</group>
 	<background splitType="Stretch"/>
 	<title height="24" splitType="Stretch">
-		<element kind="staticText" uuid="442c8def-8d03-4c89-89b0-9dbcebd796f5" x="1" y="0" width="18" height="20" fontName="Sarabun Light" fontSize="7.0">
-			<text><![CDATA[A01]]></text>
-		</element>
 		<element kind="textField" uuid="a7e15dc4-e8ff-4594-81e9-8e29b6568363" x="0" y="0" width="555" height="24" fontName="Sarabun Thin" fontSize="12.0" hTextAlign="Center" vTextAlign="Middle">
 			<expression><![CDATA[$P{JASPER_REPORT}.getName()]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -367,6 +365,11 @@ new java.text.SimpleDateFormat("dd/MM/yyyy")
 		<element kind="textField" uuid="78300b96-3498-4ddc-90a1-32c3f7f6e24b" x="539" y="0" width="15" height="20" fontName="Sarabun Thin" fontSize="8.0" evaluationTime="Report" hTextAlign="Left">
 			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="textField" uuid="95eceea2-806d-4281-8473-2e9120d72a07" x="0" y="0" width="40" height="14" fontName="Sarabun Light" fontSize="7.0" blankWhenNull="true">
+			<expression><![CDATA["[" + $P{report} + "]"]]></expression>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
 		<property name="com.jaspersoft.studio.unit.height" value="px"/>
 	</title>

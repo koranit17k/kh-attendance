@@ -56,6 +56,7 @@
 		<defaultValueExpression><![CDATA["2025-12-31"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comCode" class="java.lang.String"/>
+	<parameter name="report" class="java.lang.String"/>
 	<query language="SQL"><![CDATA[SELECT
     v.*,
     e.comCode AS comCode,
@@ -253,15 +254,12 @@ ORDER BY e.comCode, e.scanCode]]></query>
 		<element kind="textField" uuid="77f91706-70bb-46b1-8780-b1005ee9bd10" x="290" y="0" width="178" height="20" fontName="Sarabun Thin" fontSize="12.0" hTextAlign="Center" vTextAlign="Middle">
 			<expression><![CDATA[$P{JASPER_REPORT}.getName()]]></expression>
 		</element>
-		<element kind="textField" uuid="9174d50f-387b-4cd6-b113-174c230d209a" x="660" y="0" width="90" height="30">
+		<element kind="textField" uuid="9174d50f-387b-4cd6-b113-174c230d209a" x="660" y="0" width="90" height="30" fontName="Sarabun Thin">
 			<expression><![CDATA[new java.text.SimpleDateFormat("d MMMM yyyy", new java.util.Locale("th", "TH"))
     .format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($P{startDate}))
 + " ถึง " 
 + new java.text.SimpleDateFormat("d MMMM yyyy", new java.util.Locale("th", "TH"))
     .format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($P{endDate}))]]></expression>
-		</element>
-		<element kind="staticText" uuid="4ea45d9c-2f31-4032-ab43-856f8f0ddf8b" x="1" y="0" width="18" height="20" fontName="Sarabun Light" fontSize="7.0">
-			<text><![CDATA[A03]]></text>
 		</element>
 		<element kind="textField" uuid="c1fb61d6-3ccf-418a-adaf-6f7e5d455ee0" x="786" y="0" width="15" height="20" fontName="Sarabun Thin" fontSize="8.0" evaluationTime="Report" hTextAlign="Left">
 			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
@@ -271,8 +269,13 @@ ORDER BY e.comCode, e.scanCode]]></query>
 			<expression><![CDATA[$V{PAGE_NUMBER}+" /"]]></expression>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 		</element>
-		<element kind="textField" uuid="4ff9c8e7-d9bf-44c2-8482-b93d9a702110" x="598" y="0" width="70" height="30">
+		<element kind="textField" uuid="4ff9c8e7-d9bf-44c2-8482-b93d9a702110" x="598" y="0" width="70" height="30" fontName="Sarabun Thin">
 			<expression><![CDATA["ประจำเดือน : "]]></expression>
+		</element>
+		<element kind="textField" uuid="4fa44eb4-c686-4487-98af-2bc862b0552f" x="0" y="0" width="40" height="14" fontName="Sarabun Light" fontSize="7.0" blankWhenNull="true">
+			<expression><![CDATA["[" + $P{report} + "]"]]></expression>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
 	</title>
 	<pageHeader height="15" splitType="Stretch">
