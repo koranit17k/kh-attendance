@@ -2,6 +2,170 @@
 <jasperReport name="รายงานวิเคราะห์พนักงาน" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8d4f381e-dcc0-4411-a9b1-6b732bc634e8" floatColumnFooter="true">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="payroll"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<dataset name="topLate" uuid="48d8ce4a-9445-4cb8-943a-3de684113077">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="payroll"/>
+		<parameter name="startDate" class="java.lang.String">
+			<defaultValueExpression><![CDATA["2025-12-01"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="endDate" class="java.lang.String">
+			<defaultValueExpression><![CDATA["2025-12-31"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="comCode" class="java.lang.String"/>
+		<query language="SQL"><![CDATA[SELECT
+    e.empCode,
+    e.scanCode,
+    e.name AS employee_name,
+    SUM(
+        COALESCE(v.late_morning_minutes, 0) +
+        COALESCE(v.late_lunch_minutes, 0)
+    ) AS total_late,
+    SUM(
+        CASE
+            WHEN v.status IN ('FullDay','HalfDay')
+             AND (
+                  COALESCE(v.late_morning_minutes, 0) > 0
+                  OR COALESCE(v.late_lunch_minutes, 0) > 0
+             )
+            THEN 1
+            ELSE 0
+        END
+    ) AS late_cnt,
+    SUM(
+        CASE
+            WHEN v.status = 'Absent' THEN 1
+            ELSE 0
+        END
+    ) AS absent_cnt
+FROM attendance v
+JOIN employee e
+    ON v.comCode = e.comCode
+   AND v.empCode = e.empCode
+   WHERE v.comCode = $P{comCode} AND STR_TO_DATE(v.dateAt, '%Y-%m-%d') BETWEEN STR_TO_DATE($P{startDate}, '%Y-%m-%d') AND STR_TO_DATE($P{endDate}, '%Y-%m-%d')
+GROUP BY
+    e.empCode,
+    e.scanCode,
+    e.name
+ORDER BY
+    total_late DESC,
+    late_cnt DESC,
+    absent_cnt DESC,
+    e.empCode
+LIMIT 10]]></query>
+		<field name="empCode" class="java.lang.Integer">
+			<description><![CDATA[รหัสพนักงาน]]></description>
+			<property name="com.jaspersoft.studio.field.name" value="empCode"/>
+			<property name="com.jaspersoft.studio.field.label" value="empCode"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+		</field>
+		<field name="scanCode" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="scanCode"/>
+			<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+		</field>
+		<field name="employee_name" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="name"/>
+			<property name="com.jaspersoft.studio.field.label" value="employee_name"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+		</field>
+		<field name="total_late" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="total_late"/>
+			<property name="com.jaspersoft.studio.field.label" value="total_late"/>
+		</field>
+		<field name="late_cnt" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="late_cnt"/>
+			<property name="com.jaspersoft.studio.field.label" value="late_cnt"/>
+		</field>
+		<field name="absent_cnt" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="absent_cnt"/>
+			<property name="com.jaspersoft.studio.field.label" value="absent_cnt"/>
+		</field>
+		<group name="empCode">
+			<expression><![CDATA[$F{empCode}]]></expression>
+		</group>
+		<group name="employee_name">
+			<expression><![CDATA[$F{employee_name}]]></expression>
+		</group>
+	</dataset>
+	<dataset name="topAbsent" uuid="3dbfd2b5-0de0-4f34-a210-ae3fff0a6824">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="payroll"/>
+		<parameter name="startDate" class="java.lang.String">
+			<defaultValueExpression><![CDATA["2025-12-01"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="endDate" class="java.lang.String">
+			<defaultValueExpression><![CDATA["2025-12-31"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="comCode" class="java.lang.String"/>
+		<query language="SQL"><![CDATA[SELECT
+    e.empCode,
+    e.scanCode,
+    e.name AS employee_name,
+    SUM(
+        COALESCE(v.late_morning_minutes, 0) +
+        COALESCE(v.late_lunch_minutes, 0)
+    ) AS total_late,
+    SUM(
+        CASE
+            WHEN v.status IN ('FullDay','HalfDay')
+             AND (
+                  COALESCE(v.late_morning_minutes, 0) > 0
+                  OR COALESCE(v.late_lunch_minutes, 0) > 0
+             )
+            THEN 1
+            ELSE 0
+        END
+    ) AS late_cnt,
+    SUM(
+        CASE
+            WHEN v.status = 'Absent' THEN 1
+            ELSE 0
+        END
+    ) AS absent_cnt
+FROM attendance v
+JOIN employee e
+    ON v.comCode = e.comCode
+   AND v.empCode = e.empCode
+   WHERE v.comCode = $P{comCode} AND STR_TO_DATE(v.dateAt, '%Y-%m-%d') BETWEEN STR_TO_DATE($P{startDate}, '%Y-%m-%d') AND STR_TO_DATE($P{endDate}, '%Y-%m-%d')
+GROUP BY
+    e.empCode,
+    e.scanCode,
+    e.name
+ORDER BY
+    absent_cnt DESC,
+    total_late DESC,
+    late_cnt DESC,
+    e.empCode
+LIMIT 10]]></query>
+		<field name="empCode" class="java.lang.Integer">
+			<description><![CDATA[รหัสพนักงาน]]></description>
+			<property name="com.jaspersoft.studio.field.name" value="empCode"/>
+			<property name="com.jaspersoft.studio.field.label" value="empCode"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+		</field>
+		<field name="scanCode" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="scanCode"/>
+			<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+		</field>
+		<field name="employee_name" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="name"/>
+			<property name="com.jaspersoft.studio.field.label" value="employee_name"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+		</field>
+		<field name="total_late" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="total_late"/>
+			<property name="com.jaspersoft.studio.field.label" value="total_late"/>
+		</field>
+		<field name="late_cnt" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="late_cnt"/>
+			<property name="com.jaspersoft.studio.field.label" value="late_cnt"/>
+		</field>
+		<field name="absent_cnt" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="absent_cnt"/>
+			<property name="com.jaspersoft.studio.field.label" value="absent_cnt"/>
+		</field>
+	</dataset>
 	<parameter name="startDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2025-12-01"]]></defaultValueExpression>
 	</parameter>
@@ -455,59 +619,74 @@ $F{total_workmin}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
 			</element>
 		</band>
 	</detail>
-	<columnFooter height="23" splitType="Stretch"/>
-	<pageFooter height="33" splitType="Stretch"/>
-	<summary height="82" splitType="Stretch">
-		<element kind="staticText" uuid="4d755029-d50f-49d8-a964-f857b8a09ec1" x="0" y="0" width="70" height="14" fontName="Sarabun Thin">
-			<text><![CDATA[พนักงานทั้งหมด]]></text>
+	<pageFooter height="11" splitType="Stretch"/>
+	<summary height="216" splitType="Stretch">
+		<element kind="chart" chartType="bar" uuid="25e1ea56-69a8-4f56-85fc-7d9f6f8d5341" x="0" y="18" width="290" height="160" showLegend="false" evaluationTime="Report" titlePosition="Top">
+			<titleFont fontName="Sarabun Light" fontSize="10.0" bold="false"/>
+			<titleExpression><![CDATA["10 อันดับพนักงานที่สายมากที่สุด"]]></titleExpression>
+			<dataset kind="category">
+				<datasetRun uuid="474fc820-91ed-4efe-89ee-fcd79578a62d" subDataset="topLate">
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<parameter name="startDate">
+						<expression><![CDATA[$P{startDate}]]></expression>
+					</parameter>
+					<parameter name="endDate">
+						<expression><![CDATA[$P{endDate}]]></expression>
+					</parameter>
+					<parameter name="comCode">
+						<expression><![CDATA[$P{comCode}]]></expression>
+					</parameter>
+				</datasetRun>
+				<series>
+					<seriesExpression><![CDATA["SERIES 1"]]></seriesExpression>
+					<categoryExpression><![CDATA[$F{employee_name}]]></categoryExpression>
+					<valueExpression><![CDATA[$F{total_late}]]></valueExpression>
+				</series>
+			</dataset>
+			<plot orientation="Horizontal" foregroundAlpha="1.0" categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisVerticalTickLabels="true" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisVerticalTickLabels="false" valueAxisLineColor="#000000" showLabels="true">
+				<categoryAxisLabelFont fontName="Sarabun Light" fontSize="6.0"/>
+				<categoryAxisTickLabelFont fontName="Sarabun Light" fontSize="7.0"/>
+				<valueAxisLabelFont fontName="Sarabun Light" fontSize="6.0"/>
+				<valueAxisTickLabelFont fontName="Sarabun Light" fontSize="8.0"/>
+				<itemLabel>
+					<font fontName="Sarabun Light" fontSize="7.0"/>
+				</itemLabel>
+				<seriesColor order="0" color="#FFA14A"/>
+			</plot>
 		</element>
-		<element kind="staticText" uuid="0eefdb5a-8083-46e6-abe5-c69c4ec7460b" x="0" y="14" width="70" height="14" fontName="Sarabun Thin">
-			<text><![CDATA[พนักงานตรงเวลา]]></text>
-		</element>
-		<element kind="staticText" uuid="9c7888fd-97dc-4745-81d8-0d11d202485b" x="0" y="28" width="70" height="14" fontName="Sarabun Thin">
-			<text><![CDATA[พนักงานสาย]]></text>
-		</element>
-		<element kind="staticText" uuid="a9d324e6-c00d-4ae5-b223-6daef96e7506" x="0" y="42" width="70" height="14" fontName="Sarabun Thin">
-			<text><![CDATA[พนักงานขาด]]></text>
-		</element>
-		<element kind="staticText" uuid="c76092dd-63ae-41ca-8866-3174ec5ab84f" x="0" y="56" width="70" height="14" fontName="Sarabun Thin">
-			<text><![CDATA[พนักงานไม่พัก]]></text>
-		</element>
-		<element kind="textField" uuid="68814c11-de4c-4b7c-a12f-01b6cf0be7eb" x="70" y="42" width="20" height="14" fontName="Sarabun Thin" hTextAlign="Right">
-			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e8faded7-3feb-49c2-97f5-675beba13dd1"/>
-		</element>
-		<element kind="staticText" uuid="c97ec4e9-f49a-482e-ba62-e729cca2a82d" x="90" y="14" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
-			<text><![CDATA[คน]]></text>
+		<element kind="chart" chartType="bar" uuid="dba3453d-8c58-4e8f-b5e5-d74738ef1b29" x="280" y="18" width="275" height="197" showLegend="false" evaluationTime="Report">
+			<titleFont fontName="Sarabun Light"/>
+			<titleExpression><![CDATA["10 อันดับพนักงานที่ขาดมากที่สุด"]]></titleExpression>
+			<dataset kind="category">
+				<datasetRun uuid="fbed144d-951c-4ba3-8d81-ae83dce5130a" subDataset="topAbsent">
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<parameter name="startDate">
+						<expression><![CDATA[$P{startDate}]]></expression>
+					</parameter>
+					<parameter name="endDate">
+						<expression><![CDATA[$P{endDate}]]></expression>
+					</parameter>
+					<parameter name="comCode">
+						<expression><![CDATA[$P{comCode}]]></expression>
+					</parameter>
+				</datasetRun>
+				<series>
+					<seriesExpression><![CDATA["SERIES 1"]]></seriesExpression>
+					<categoryExpression><![CDATA[$F{employee_name}]]></categoryExpression>
+					<valueExpression><![CDATA[$F{absent_cnt}]]></valueExpression>
+				</series>
+			</dataset>
+			<plot labelRotation="45.0" categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000" showLabels="true" categoryAxisTickLabelRotation="45.0">
+				<categoryAxisLabelFont fontName="Sarabun Light" fontSize="8.0"/>
+				<categoryAxisTickLabelFont fontName="Sarabun Light" fontSize="8.0"/>
+				<valueAxisLabelFont fontName="Sarabun Light" fontSize="6.0"/>
+				<valueAxisTickLabelFont fontName="Sarabun Light" fontSize="6.0"/>
+				<itemLabel>
+					<font fontName="Sarabun Light" fontSize="8.0"/>
+				</itemLabel>
+			</plot>
+			<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<property name="com.jaspersoft.studio.unit.width" value="px"/>
-			<box rightPadding="6"/>
-		</element>
-		<element kind="textField" uuid="49bcbd4e-bbf3-4cce-a9df-69e7fe19ae3d" x="70" y="28" width="20" height="14" fontName="Sarabun Thin" hTextAlign="Right">
-			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e8faded7-3feb-49c2-97f5-675beba13dd1"/>
-		</element>
-		<element kind="textField" uuid="9d5f2f11-c4f5-4bd1-8d92-9a5f6cb2b10e" x="70" y="14" width="20" height="14" fontName="Sarabun Thin" hTextAlign="Right">
-			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e8faded7-3feb-49c2-97f5-675beba13dd1"/>
-		</element>
-		<element kind="staticText" uuid="9a0a12a9-7d36-4258-a747-a5c8367af3ab" x="90" y="42" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
-			<text><![CDATA[คน]]></text>
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<property name="com.jaspersoft.studio.unit.width" value="px"/>
-			<box rightPadding="6"/>
-		</element>
-		<element kind="staticText" uuid="381f0936-968e-4e5c-a6df-c049d8d4b30e" x="90" y="28" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
-			<text><![CDATA[คน]]></text>
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<property name="com.jaspersoft.studio.unit.width" value="px"/>
-			<box rightPadding="6"/>
-		</element>
-		<element kind="textField" uuid="5139336a-2088-48c5-8e27-d1ceb0460b49" x="70" y="56" width="20" height="14" fontName="Sarabun Thin" hTextAlign="Right">
-			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e8faded7-3feb-49c2-97f5-675beba13dd1"/>
-		</element>
-		<element kind="staticText" uuid="fc52550a-1db4-4504-8baf-74d770a0189d" x="90" y="56" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
-			<text><![CDATA[คน]]></text>
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<property name="com.jaspersoft.studio.unit.width" value="px"/>
-			<box rightPadding="6"/>
 		</element>
 	</summary>
 </jasperReport>
