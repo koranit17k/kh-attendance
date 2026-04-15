@@ -196,3 +196,11 @@ create table `permission` (
     constraint `permission_ibfk_1` foreign key (`comCode`) references `company` (`comCode`),
     constraint `permission_ibfk_2` foreign key (`userId`) references `users` (`id`) on delete cascade
 ) ENGINE = InnoDB default CHARSET = utf8mb4 collate = utf8mb4_general_ci COMMENT = 'สิทธิการใช้โปรแกรม';
+
+-- payroll.counter definition
+CREATE TABLE `counter` (
+  `value` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp()
+);
+
+
