@@ -99,7 +99,7 @@ JOIN employee e
     ON v.comCode = e.comCode
    AND v.empCode = e.empCode
 
-WHERE v.comCode = $P{comCode}
+WHERE FIND_IN_SET(v.comCode, REPLACE($P{comCode}, ' ', '')) > 0
   AND STR_TO_DATE(v.dateAt, '%Y-%m-%d')
       BETWEEN STR_TO_DATE($P{startDate}, '%Y-%m-%d')
           AND STR_TO_DATE($P{endDate}, '%Y-%m-%d')
@@ -109,7 +109,7 @@ GROUP BY
     STR_TO_DATE(v.dateAt, '%Y-%m-%d')
 
 ORDER BY
-    work_date;]]></query>
+    v.comcode;]]></query>
 	<field name="comCode" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="comCode"/>
 		<property name="com.jaspersoft.studio.field.label" value="comCode"/>

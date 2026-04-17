@@ -121,25 +121,36 @@ const validateForm = () => {
 const getPDF = () => {
   if (!validateForm()) return
 
-  for (const code of form.comCode) {
+  if (form.report === 'A05') {
     const payload = { 
         ...form, 
-        comCode: code,
+        comCode: form.comCode.join(','),
         startDate: rangeState.value.start,
         endDate: rangeState.value.end
     } as any
     const params = new URLSearchParams(payload)
     window.open(`/api/callreport?${params.toString()}`, "_blank")
+  } else {
+    for (const code of form.comCode) {
+      const payload = { 
+          ...form, 
+          comCode: code,
+          startDate: rangeState.value.start,
+          endDate: rangeState.value.end
+      } as any
+      const params = new URLSearchParams(payload)
+      window.open(`/api/callreport?${params.toString()}`, "_blank")
+    }
   }
 }
 
 const openPDF = async () => {
   if (!validateForm()) return
   
-  for (const code of form.comCode) {
+  const processReport = async (codeStr: string) => {
     const payload = { 
         ...form, 
-        comCode: code,
+        comCode: codeStr,
         startDate: rangeState.value.start,
         endDate: rangeState.value.end
     }
@@ -163,8 +174,16 @@ const openPDF = async () => {
         reportWindow.location.href = blobUrl
     } catch (e: any) {
         console.error(e)
-        alert(`Error for company ${code}: ${e.message}`)
+        alert(`Error for company ${codeStr}: ${e.message}`)
         if (reportWindow) reportWindow.close()
+    }
+  }
+
+  if (form.report === 'A05') {
+    await processReport(form.comCode.join(','))
+  } else {
+    for (const code of form.comCode) {
+      await processReport(code)
     }
   }
 }
