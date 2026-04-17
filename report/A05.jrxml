@@ -494,8 +494,8 @@ ORDER BY
 	</detail>
 	<columnFooter height="11" splitType="Stretch"/>
 	<pageFooter height="16" splitType="Stretch"/>
-	<summary height="720" splitType="Stretch">
-		<element kind="chart" chartType="line" uuid="d9a35224-40f4-4987-82ff-29ef9109cfaf" x="0" y="0" width="554" height="159" evaluationTime="Report">
+	<summary height="802" splitType="Stretch">
+		<element kind="chart" chartType="bar" uuid="4f15ea03-dd79-4a52-a646-19f615d00a49" x="0" y="0" width="554" height="159" evaluationTime="Report">
 			<titleFont fontName="Sarabun Light" fontSize="10.0"/>
 			<titleExpression><![CDATA["Attendance Rate ในแต่ละบริษัท"]]></titleExpression>
 			<dataset kind="category">
@@ -505,9 +505,11 @@ ORDER BY
 					<valueExpression><![CDATA[$F{attendance_rate}]]></valueExpression>
 				</series>
 			</dataset>
-			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000"/>
+			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000">
+				<itemLabel/>
+			</plot>
 		</element>
-		<element kind="chart" chartType="line" uuid="51388fe2-0fba-40cc-b687-20880d1fcc07" x="0" y="170" width="554" height="150" evaluationTime="Report">
+		<element kind="chart" chartType="line" uuid="51388fe2-0fba-40cc-b687-20880d1fcc07" x="0" y="370" width="554" height="150" evaluationTime="Report">
 			<titleExpression><![CDATA["absent rate "]]></titleExpression>
 			<dataset kind="category">
 				<series>
@@ -518,7 +520,7 @@ ORDER BY
 			</dataset>
 			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000"/>
 		</element>
-		<element kind="chart" chartType="line" uuid="48cdfc3b-e218-40a2-bcde-573935dea1c2" x="0" y="320" width="554" height="200" evaluationTime="Report">
+		<element kind="chart" chartType="line" uuid="48cdfc3b-e218-40a2-bcde-573935dea1c2" x="0" y="159" width="554" height="200" evaluationTime="Report">
 			<titleExpression><![CDATA["Halfday rate"]]></titleExpression>
 			<dataset kind="category">
 				<series>
@@ -529,7 +531,7 @@ ORDER BY
 			</dataset>
 			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000"/>
 		</element>
-		<element kind="chart" chartType="line" uuid="3686124c-b85c-4caa-a22c-17be13ea9738" x="0" y="520" width="554" height="200" evaluationTime="Report">
+		<element kind="chart" chartType="bar" uuid="b39a3e2e-d859-4d33-8523-03bec381f4ff" x="0" y="520" width="554" height="200" evaluationTime="Report">
 			<titleExpression><![CDATA["avg late minute "]]></titleExpression>
 			<dataset kind="category">
 				<series>
@@ -543,6 +545,7 @@ ORDER BY
 				<categoryAxisTickLabelFont fontName="Sarabun Light"/>
 				<valueAxisLabelFont fontName="Sarabun Light"/>
 				<valueAxisTickLabelFont fontName="Sarabun Light"/>
+				<itemLabel/>
 			</plot>
 		</element>
 	</summary>
