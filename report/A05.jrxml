@@ -14,6 +14,7 @@
 	</parameter>
 	<query language="sql"><![CDATA[SELECT
 *,
+c.comName As company_name,
     v.comCode,
     STR_TO_DATE(v.dateAt, '%Y-%m-%d') AS work_date,
     DATE_FORMAT(STR_TO_DATE(v.dateAt, '%Y-%m-%d'), '%d/%m') AS day_label,
@@ -80,7 +81,7 @@ ROUND(
         ),
         0
     ),
-    2
+    0
 ) AS avg_late_minutes,
 
 ROUND(
@@ -91,13 +92,15 @@ ROUND(
             ELSE 0
         END
     ) / 60 / NULLIF(COUNT(DISTINCT e.empCode), 0),
-    2
+    0
 ) AS ot_per_employee
 
 FROM attendance v
 JOIN employee e
     ON v.comCode = e.comCode
    AND v.empCode = e.empCode
+   JOIN company c
+  ON c.comCode = e.comCode
 
 WHERE FIND_IN_SET(v.comCode, REPLACE($P{comCode}, ' ', '')) > 0
   AND STR_TO_DATE(v.dateAt, '%Y-%m-%d')
@@ -408,6 +411,67 @@ ORDER BY
 	<field name="COLUMN_52" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="comCode"/>
 		<property name="com.jaspersoft.studio.field.label" value="comCode"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
+	</field>
+	<field name="comName" class="java.lang.String">
+		<description><![CDATA[บริษัท ชื่อ]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="comName"/>
+		<property name="com.jaspersoft.studio.field.label" value="comName"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
+	</field>
+	<field name="COLUMN_54" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="taxId"/>
+		<property name="com.jaspersoft.studio.field.label" value="taxId"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
+	</field>
+	<field name="COLUMN_55" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="address"/>
+		<property name="com.jaspersoft.studio.field.label" value="address"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
+	</field>
+	<field name="COLUMN_56" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="phone"/>
+		<property name="com.jaspersoft.studio.field.label" value="phone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
+	</field>
+	<field name="email1" class="java.lang.String">
+		<description><![CDATA[email 1]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="email1"/>
+		<property name="com.jaspersoft.studio.field.label" value="email1"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
+	</field>
+	<field name="email2" class="java.lang.String">
+		<description><![CDATA[email 2]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="email2"/>
+		<property name="com.jaspersoft.studio.field.label" value="email2"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
+	</field>
+	<field name="email3" class="java.lang.String">
+		<description><![CDATA[email 3]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="email3"/>
+		<property name="com.jaspersoft.studio.field.label" value="email3"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
+	</field>
+	<field name="yrPayroll" class="java.sql.Date">
+		<description><![CDATA[ปีปัจจุบันที่กำลังทำงาน]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="yrPayroll"/>
+		<property name="com.jaspersoft.studio.field.label" value="yrPayroll"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
+	</field>
+	<field name="mnPayroll" class="java.lang.Integer">
+		<description><![CDATA[เดือนปัจจุบันที่กำลังทำงาน]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="mnPayroll"/>
+		<property name="com.jaspersoft.studio.field.label" value="mnPayroll"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
+	</field>
+	<field name="company_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="comName"/>
+		<property name="com.jaspersoft.studio.field.label" value="company_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
+	</field>
+	<field name="COLUMN_63" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="comCode"/>
+		<property name="com.jaspersoft.studio.field.label" value="comCode"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="work_date" class="java.sql.Date">
@@ -489,58 +553,97 @@ ORDER BY
 		</element>
 	</pageHeader>
 	<summary height="720" splitType="Stretch">
-		<element kind="chart" chartType="line" uuid="608b998c-7196-404b-bfa4-1aa7ee70a0dc" x="0" y="0" width="554" height="179" evaluationTime="Report" linkType="None" linkTarget="Self">
-			<titleFont fontName="Sarabun Thin" fontSize="10.0"/>
+		<element kind="chart" chartType="line" uuid="24c2b9fb-7661-41aa-a06e-5bf39da5b769" x="0" y="0" width="554" height="179" showLegend="true" evaluationTime="Report" linkType="None" linkTarget="Self" legendPosition="Bottom">
+			<titleFont fontName="Sarabun Thin" fontSize="10.0" strikeThrough="false"/>
+			<legendFont fontName="Sarabun Thin"/>
 			<titleExpression><![CDATA["Attendance Rate ในแต่ละบริษัท (%)"]]></titleExpression>
 			<dataset kind="category">
 				<series>
-					<seriesExpression><![CDATA[$F{comCode}]]></seriesExpression>
+					<seriesExpression><![CDATA[$F{company_name}]]></seriesExpression>
 					<categoryExpression><![CDATA[$F{day_label}]]></categoryExpression>
 					<valueExpression><![CDATA[$F{attendance_rate}]]></valueExpression>
 				</series>
 			</dataset>
-			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000"/>
+			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000">
+				<categoryAxisLabelFont fontName="Sarabun Thin"/>
+				<categoryAxisTickLabelFont fontName="Sarabun Thin"/>
+				<valueAxisLabelFont fontName="Sarabun Thin"/>
+				<valueAxisTickLabelFont fontName="Sarabun Thin"/>
+			</plot>
+			<property name="net.sf.jasperreports.customizer.0.shapeType" value="ellipse"/>
+			<property name="net.sf.jasperreports.customizer.0.selectionMode" value="allItems"/>
+			<property name="net.sf.jasperreports.customizer.0.allItems" value="true"/>
+			<property name="net.sf.jasperreports.customizer.class.0" value="net.sf.jasperreports.customizers.shape.LineDotShapeCustomizer"/>
+			<property name="net.sf.jasperreports.customizer.0.shapeWidth" value="4"/>
+			<property name="net.sf.jasperreports.customizer.0.shapeHeight" value="6"/>
 		</element>
-		<element kind="chart" chartType="line" uuid="51388fe2-0fba-40cc-b687-20880d1fcc07" x="0" y="370" width="554" height="150" evaluationTime="Report">
+		<element kind="chart" chartType="line" uuid="821358b8-c2f6-4bba-b82a-7e670a0ecc80" x="0" y="370" width="554" height="150" evaluationTime="Report">
 			<titleFont fontName="Sarabun Thin"/>
+			<legendFont fontName="Sarabun Thin"/>
 			<titleExpression><![CDATA["absent rate (%) "]]></titleExpression>
 			<dataset kind="category">
 				<series>
-					<seriesExpression><![CDATA[$F{comCode}]]></seriesExpression>
+					<seriesExpression><![CDATA[$F{company_name}]]></seriesExpression>
 					<categoryExpression><![CDATA[$F{day_label}]]></categoryExpression>
 					<valueExpression><![CDATA[$F{absent_rate}]]></valueExpression>
 				</series>
 			</dataset>
-			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000"/>
+			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000">
+				<categoryAxisLabelFont fontName="Sarabun Thin"/>
+				<categoryAxisTickLabelFont fontName="Sarabun Thin"/>
+				<valueAxisLabelFont fontName="Sarabun Thin"/>
+				<valueAxisTickLabelFont fontName="Sarabun Thin"/>
+			</plot>
+			<property name="net.sf.jasperreports.customizer.0.selectionMode" value="allItems"/>
+			<property name="net.sf.jasperreports.customizer.0.allItems" value="true"/>
+			<property name="net.sf.jasperreports.customizer.0.shapeType" value="ellipse"/>
+			<property name="net.sf.jasperreports.customizer.0.shapeWidth" value="4"/>
+			<property name="net.sf.jasperreports.customizer.0.shapeHeight" value="6"/>
+			<property name="net.sf.jasperreports.customizer.class.0" value="net.sf.jasperreports.customizers.shape.LineDotShapeCustomizer"/>
 		</element>
-		<element kind="chart" chartType="line" uuid="48cdfc3b-e218-40a2-bcde-573935dea1c2" x="0" y="190" width="554" height="168" evaluationTime="Report">
+		<element kind="chart" chartType="line" uuid="f9d96e82-d153-48da-b898-dedae0b19203" x="0" y="190" width="554" height="168" evaluationTime="Report">
 			<titleFont fontName="Sarabun Thin"/>
+			<legendFont fontName="Sarabun Thin"/>
 			<titleExpression><![CDATA["Halfday rate (%)"]]></titleExpression>
 			<dataset kind="category">
 				<series>
-					<seriesExpression><![CDATA[$F{comCode}]]></seriesExpression>
+					<seriesExpression><![CDATA[$F{company_name}]]></seriesExpression>
 					<categoryExpression><![CDATA[$F{day_label}]]></categoryExpression>
 					<valueExpression><![CDATA[$F{half_day_rate}]]></valueExpression>
 				</series>
 			</dataset>
-			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000"/>
+			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000">
+				<categoryAxisLabelFont fontName="Sarabun Thin"/>
+				<categoryAxisTickLabelFont fontName="Sarabun Thin"/>
+				<valueAxisLabelFont fontName="Sarabun Thin"/>
+				<valueAxisTickLabelFont fontName="Sarabun Thin"/>
+			</plot>
+			<property name="net.sf.jasperreports.customizer.0.selectionMode" value="allItems"/>
+			<property name="net.sf.jasperreports.customizer.0.allItems" value="true"/>
+			<property name="net.sf.jasperreports.customizer.0.shapeType" value="ellipse"/>
+			<property name="net.sf.jasperreports.customizer.0.shapeWidth" value="4"/>
+			<property name="net.sf.jasperreports.customizer.0.shapeHeight" value="6"/>
+			<property name="net.sf.jasperreports.customizer.class.0" value="net.sf.jasperreports.customizers.shape.LineDotShapeCustomizer"/>
 		</element>
-		<element kind="chart" chartType="bar" uuid="b39a3e2e-d859-4d33-8523-03bec381f4ff" x="0" y="530" width="554" height="190" evaluationTime="Report">
+		<element kind="chart" chartType="bar" uuid="81cdc9a6-6674-4d2c-9be2-b3615650f332" positionType="Float" x="0" y="530" width="554" height="190" evaluationTime="Report">
 			<titleFont fontName="Sarabun Thin"/>
+			<legendFont fontName="Sarabun Thin"/>
 			<titleExpression><![CDATA["Late เฉลี่ย (นาที)"]]></titleExpression>
 			<dataset kind="category">
 				<series>
-					<seriesExpression><![CDATA[$F{comCode}]]></seriesExpression>
+					<seriesExpression><![CDATA[$F{company_name}]]></seriesExpression>
 					<categoryExpression><![CDATA[$F{day_label}]]></categoryExpression>
 					<valueExpression><![CDATA[$F{avg_late_minutes}]]></valueExpression>
 				</series>
 			</dataset>
-			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000">
-				<categoryAxisLabelFont fontName="Sarabun Light"/>
-				<categoryAxisTickLabelFont fontName="Sarabun Light"/>
-				<valueAxisLabelFont fontName="Sarabun Light"/>
-				<valueAxisTickLabelFont fontName="Sarabun Light"/>
-				<itemLabel/>
+			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000" showLabels="true">
+				<categoryAxisLabelFont fontName="Sarabun Thin"/>
+				<categoryAxisTickLabelFont fontName="Sarabun Thin"/>
+				<valueAxisLabelFont fontName="Sarabun Thin"/>
+				<valueAxisTickLabelFont fontName="Sarabun Thin"/>
+				<itemLabel>
+					<font fontName="Sarabun Thin"/>
+				</itemLabel>
 			</plot>
 		</element>
 	</summary>
