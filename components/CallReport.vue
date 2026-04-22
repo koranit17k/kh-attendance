@@ -121,36 +121,25 @@ const validateForm = () => {
 const getPDF = () => {
   if (!validateForm()) return
 
-  if (form.report === 'A05') {
+  for (const code of form.comCode) {
     const payload = { 
         ...form, 
-        comCode: form.comCode.join(','),
+        comCode: code,
         startDate: rangeState.value.start,
         endDate: rangeState.value.end
     } as any
     const params = new URLSearchParams(payload)
     window.open(`/api/callreport?${params.toString()}`, "_blank")
-  } else {
-    for (const code of form.comCode) {
-      const payload = { 
-          ...form, 
-          comCode: code,
-          startDate: rangeState.value.start,
-          endDate: rangeState.value.end
-      } as any
-      const params = new URLSearchParams(payload)
-      window.open(`/api/callreport?${params.toString()}`, "_blank")
-    }
   }
 }
 
 const openPDF = async () => {
   if (!validateForm()) return
   
-  const processReport = async (codeStr: string) => {
+  for (const code of form.comCode) {
     const payload = { 
         ...form, 
-        comCode: codeStr,
+        comCode: code,
         startDate: rangeState.value.start,
         endDate: rangeState.value.end
     }
@@ -163,9 +152,7 @@ const openPDF = async () => {
     try {
         const response = await fetch("/api/callreport", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
         })
         if (!response.ok) throw new Error(`Status: ${response.status}`)
@@ -174,16 +161,8 @@ const openPDF = async () => {
         reportWindow.location.href = blobUrl
     } catch (e: any) {
         console.error(e)
-        alert(`Error for company ${codeStr}: ${e.message}`)
+        alert(`Error for company ${code}: ${e.message}`)
         if (reportWindow) reportWindow.close()
-    }
-  }
-
-  if (form.report === 'A05') {
-    await processReport(form.comCode.join(','))
-  } else {
-    for (const code of form.comCode) {
-      await processReport(code)
     }
   }
 }
