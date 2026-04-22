@@ -13,8 +13,7 @@
 		<defaultValueExpression><![CDATA["01"]]></defaultValueExpression>
 	</parameter>
 	<query language="sql"><![CDATA[SELECT
-*,
-c.comName As company_name,
+    c.comName As company_name,
     v.comCode,
     STR_TO_DATE(v.dateAt, '%Y-%m-%d') AS work_date,
     DATE_FORMAT(STR_TO_DATE(v.dateAt, '%Y-%m-%d'), '%d/%m') AS day_label,
@@ -99,380 +98,29 @@ FROM attendance v
 JOIN employee e
     ON v.comCode = e.comCode
    AND v.empCode = e.empCode
-   JOIN company c
-  ON c.comCode = e.comCode
+JOIN company c
+   ON c.comCode = e.comCode
 
 WHERE FIND_IN_SET(v.comCode, REPLACE($P{comCode}, ' ', '')) > 0
-  AND STR_TO_DATE(v.dateAt, '%Y-%m-%d')
-      BETWEEN STR_TO_DATE($P{startDate}, '%Y-%m-%d')
-          AND STR_TO_DATE($P{endDate}, '%Y-%m-%d')
+  AND v.dateAt BETWEEN $P{startDate} AND $P{endDate}
 
 GROUP BY
     v.comCode,
-    STR_TO_DATE(v.dateAt, '%Y-%m-%d')
+    c.comName,
+    v.dateAt
 
 ORDER BY
-    v.comcode;]]></query>
+    v.comCode,
+    v.dateAt]]></query>
 	<field name="comCode" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="comCode"/>
 		<property name="com.jaspersoft.studio.field.label" value="comCode"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
-	<field name="empCode" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="empCode"/>
-		<property name="com.jaspersoft.studio.field.label" value="empCode"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="dateAt" class="java.lang.String">
-		<description><![CDATA[วันเดือนปีทำงาน]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="dateAt"/>
-		<property name="com.jaspersoft.studio.field.label" value="dateAt"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="status" class="java.lang.String">
-		<description><![CDATA[สถานะ]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="status"/>
-		<property name="com.jaspersoft.studio.field.label" value="status"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="day_case" class="java.lang.String">
-		<description><![CDATA[ดูวัน]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="day_case"/>
-		<property name="com.jaspersoft.studio.field.label" value="day_case"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="lunch_case" class="java.lang.String">
-		<description><![CDATA[ดูพักเที่ยง]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="lunch_case"/>
-		<property name="com.jaspersoft.studio.field.label" value="lunch_case"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="night_case" class="java.lang.String">
-		<description><![CDATA[ดูค่ำ]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="night_case"/>
-		<property name="com.jaspersoft.studio.field.label" value="night_case"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="early" class="java.lang.String">
-		<description><![CDATA[เวลาออก ข้ามวัน 00:00 - 06:00 (last)]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="early"/>
-		<property name="com.jaspersoft.studio.field.label" value="early"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="morning" class="java.lang.String">
-		<description><![CDATA[เวลาเข้า เช้า 06:00 - 10:00 (last)]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="morning"/>
-		<property name="com.jaspersoft.studio.field.label" value="morning"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="lunch_out" class="java.lang.String">
-		<description><![CDATA[เวลาพักเที่ยง 11:00 - 13:30 (first)]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="lunch_out"/>
-		<property name="com.jaspersoft.studio.field.label" value="lunch_out"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="lunch_in" class="java.lang.String">
-		<description><![CDATA[เวลากลับเที่ยง 11:30 - 14:00 (last)]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="lunch_in"/>
-		<property name="com.jaspersoft.studio.field.label" value="lunch_in"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="evening" class="java.lang.String">
-		<description><![CDATA[เวลาออก เย็น 16:00 - 18:00 (last)]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="evening"/>
-		<property name="com.jaspersoft.studio.field.label" value="evening"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="night" class="java.lang.String">
-		<description><![CDATA[เวลาออก ค่ำ 19:00 - 24:00 (last)]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="night"/>
-		<property name="com.jaspersoft.studio.field.label" value="night"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="lunch_minutes" class="java.lang.Integer">
-		<description><![CDATA[จำนวนนาทีพักกลางวัน]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="lunch_minutes"/>
-		<property name="com.jaspersoft.studio.field.label" value="lunch_minutes"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="late_morning_minutes" class="java.lang.Integer">
-		<description><![CDATA[จำนวนนาทีมาสาย เช้า]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="late_morning_minutes"/>
-		<property name="com.jaspersoft.studio.field.label" value="late_morning_minutes"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="late_lunch_minutes" class="java.lang.Integer">
-		<description><![CDATA[จำนวนนาทีมาสาย บ่าย/เที่ยง/ออกก่อนเวลางาน]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="late_lunch_minutes"/>
-		<property name="com.jaspersoft.studio.field.label" value="late_lunch_minutes"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="work_minutes" class="java.lang.Integer">
-		<description><![CDATA[จำนวนนาทีทำงาน]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="work_minutes"/>
-		<property name="com.jaspersoft.studio.field.label" value="work_minutes"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="ot_total_minutes" class="java.lang.Integer">
-		<description><![CDATA[จำนวนนาทีล่วงเวลา]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="ot_total_minutes"/>
-		<property name="com.jaspersoft.studio.field.label" value="ot_total_minutes"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="count" class="java.lang.Integer">
-		<description><![CDATA[จำนวนครั้งที่สแกน]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="count"/>
-		<property name="com.jaspersoft.studio.field.label" value="count"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="rawTime" class="java.lang.String">
-		<description><![CDATA[เวลาที่สแกน]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="rawTime"/>
-		<property name="com.jaspersoft.studio.field.label" value="rawTime"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="reason" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="reason"/>
-		<property name="com.jaspersoft.studio.field.label" value="reason"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="status_check" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="status_check"/>
-		<property name="com.jaspersoft.studio.field.label" value="status_check"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="modified_by" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="modified_by"/>
-		<property name="com.jaspersoft.studio.field.label" value="modified_by"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="modified_at" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="modified_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="modified_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="approved_by" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="approved_by"/>
-		<property name="com.jaspersoft.studio.field.label" value="approved_by"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="approved_at" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="approved_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="approved_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="COLUMN_27" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="comCode"/>
-		<property name="com.jaspersoft.studio.field.label" value="comCode"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="COLUMN_28" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="empCode"/>
-		<property name="com.jaspersoft.studio.field.label" value="empCode"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="taxId" class="java.lang.String">
-		<description><![CDATA[เลขประจำตัวผู้เสียภาษี เลขบัตรประชาชน]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="taxId"/>
-		<property name="com.jaspersoft.studio.field.label" value="taxId"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="prefix" class="java.lang.String">
-		<description><![CDATA[คำนำหน้าชื่อ]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="prefix"/>
-		<property name="com.jaspersoft.studio.field.label" value="prefix"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="name" class="java.lang.String">
-		<description><![CDATA[ชื่อจริง]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="name"/>
-		<property name="com.jaspersoft.studio.field.label" value="name"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="surName" class="java.lang.String">
-		<description><![CDATA[นามสกุล]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="surName"/>
-		<property name="com.jaspersoft.studio.field.label" value="surName"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="nickName" class="java.lang.String">
-		<description><![CDATA[ชื่อเล่น]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="nickName"/>
-		<property name="com.jaspersoft.studio.field.label" value="nickName"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="birthDate" class="java.sql.Date">
-		<description><![CDATA[วันเดือนปีเกิด]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="birthDate"/>
-		<property name="com.jaspersoft.studio.field.label" value="birthDate"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="department" class="java.lang.String">
-		<description><![CDATA[แผนก ฝ่าย]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="department"/>
-		<property name="com.jaspersoft.studio.field.label" value="department"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="timeCode" class="java.lang.Integer">
-		<description><![CDATA[timetype code]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="timeCode"/>
-		<property name="com.jaspersoft.studio.field.label" value="timeCode"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="beginDate" class="java.sql.Date">
-		<description><![CDATA[วันที่เริ่มทำงาน]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="beginDate"/>
-		<property name="com.jaspersoft.studio.field.label" value="beginDate"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="endDate" class="java.sql.Date">
-		<description><![CDATA[วันที่สิ้นสุดทำงาน]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="endDate"/>
-		<property name="com.jaspersoft.studio.field.label" value="endDate"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="empType" class="java.lang.String">
-		<description><![CDATA[ประเภทพนักงาน ประจำ/ชั่วคราว/ฝึกงาน]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="empType"/>
-		<property name="com.jaspersoft.studio.field.label" value="empType"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="bankAccount" class="java.lang.String">
-		<description><![CDATA[เลขที่บัญชีธนาคาร]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="bankAccount"/>
-		<property name="com.jaspersoft.studio.field.label" value="bankAccount"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="address" class="java.lang.String">
-		<description><![CDATA[ที่อยู่]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="address"/>
-		<property name="com.jaspersoft.studio.field.label" value="address"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="phone" class="java.lang.String">
-		<description><![CDATA[เบอร์โทรศัพท์]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="phone"/>
-		<property name="com.jaspersoft.studio.field.label" value="phone"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="childAll" class="java.lang.Integer">
-		<description><![CDATA[จำนวนบุตรทั้งหมด]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="childAll"/>
-		<property name="com.jaspersoft.studio.field.label" value="childAll"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="childEdu" class="java.lang.Integer">
-		<description><![CDATA[จำนวนบุตรกำลังศึกษา]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="childEdu"/>
-		<property name="com.jaspersoft.studio.field.label" value="childEdu"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="isSpouse" class="java.lang.Boolean">
-		<description><![CDATA[ลดหย่อนคู่สมรสหรือไม่]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="isSpouse"/>
-		<property name="com.jaspersoft.studio.field.label" value="isSpouse"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="isChildShare" class="java.lang.Boolean">
-		<description><![CDATA[ลดหย่อนบุตรแบ่งครึ่งหรือไม่]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="isChildShare"/>
-		<property name="com.jaspersoft.studio.field.label" value="isChildShare"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="isExcSocialIns" class="java.lang.Boolean">
-		<description><![CDATA[ยกเว้นประกันสังคมหรือไม่]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="isExcSocialIns"/>
-		<property name="com.jaspersoft.studio.field.label" value="isExcSocialIns"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="deductInsure" class="java.math.BigDecimal">
-		<description><![CDATA[ลดหย่อนประกันชีวิต]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="deductInsure"/>
-		<property name="com.jaspersoft.studio.field.label" value="deductInsure"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="deductHome" class="java.math.BigDecimal">
-		<description><![CDATA[ลดหย่อนผ่อนที่อยู่อาศัย]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="deductHome"/>
-		<property name="com.jaspersoft.studio.field.label" value="deductHome"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="deductElse" class="java.math.BigDecimal">
-		<description><![CDATA[ลดหย่อนอื่นๆ]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="deductElse"/>
-		<property name="com.jaspersoft.studio.field.label" value="deductElse"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="scanCode" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="scanCode"/>
-		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="COLUMN_52" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="comCode"/>
-		<property name="com.jaspersoft.studio.field.label" value="comCode"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
-	</field>
-	<field name="comName" class="java.lang.String">
-		<description><![CDATA[บริษัท ชื่อ]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="comName"/>
-		<property name="com.jaspersoft.studio.field.label" value="comName"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
-	</field>
-	<field name="COLUMN_54" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="taxId"/>
-		<property name="com.jaspersoft.studio.field.label" value="taxId"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
-	</field>
-	<field name="COLUMN_55" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="address"/>
-		<property name="com.jaspersoft.studio.field.label" value="address"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
-	</field>
-	<field name="COLUMN_56" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="phone"/>
-		<property name="com.jaspersoft.studio.field.label" value="phone"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
-	</field>
-	<field name="email1" class="java.lang.String">
-		<description><![CDATA[email 1]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="email1"/>
-		<property name="com.jaspersoft.studio.field.label" value="email1"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
-	</field>
-	<field name="email2" class="java.lang.String">
-		<description><![CDATA[email 2]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="email2"/>
-		<property name="com.jaspersoft.studio.field.label" value="email2"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
-	</field>
-	<field name="email3" class="java.lang.String">
-		<description><![CDATA[email 3]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="email3"/>
-		<property name="com.jaspersoft.studio.field.label" value="email3"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
-	</field>
-	<field name="yrPayroll" class="java.sql.Date">
-		<description><![CDATA[ปีปัจจุบันที่กำลังทำงาน]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="yrPayroll"/>
-		<property name="com.jaspersoft.studio.field.label" value="yrPayroll"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
-	</field>
-	<field name="mnPayroll" class="java.lang.Integer">
-		<description><![CDATA[เดือนปัจจุบันที่กำลังทำงาน]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="mnPayroll"/>
-		<property name="com.jaspersoft.studio.field.label" value="mnPayroll"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
-	</field>
 	<field name="company_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="comName"/>
 		<property name="com.jaspersoft.studio.field.label" value="company_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
-	</field>
-	<field name="COLUMN_63" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="comCode"/>
-		<property name="com.jaspersoft.studio.field.label" value="comCode"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="work_date" class="java.sql.Date">
 		<property name="com.jaspersoft.studio.field.name" value="work_date"/>
@@ -573,7 +221,6 @@ ORDER BY
 			<property name="net.sf.jasperreports.customizer.0.shapeType" value="ellipse"/>
 			<property name="net.sf.jasperreports.customizer.0.selectionMode" value="allItems"/>
 			<property name="net.sf.jasperreports.customizer.0.allItems" value="true"/>
-			<property name="net.sf.jasperreports.customizer.class.0" value="net.sf.jasperreports.customizers.shape.LineDotShapeCustomizer"/>
 			<property name="net.sf.jasperreports.customizer.0.shapeWidth" value="4"/>
 			<property name="net.sf.jasperreports.customizer.0.shapeHeight" value="6"/>
 		</element>
@@ -599,7 +246,6 @@ ORDER BY
 			<property name="net.sf.jasperreports.customizer.0.shapeType" value="ellipse"/>
 			<property name="net.sf.jasperreports.customizer.0.shapeWidth" value="4"/>
 			<property name="net.sf.jasperreports.customizer.0.shapeHeight" value="6"/>
-			<property name="net.sf.jasperreports.customizer.class.0" value="net.sf.jasperreports.customizers.shape.LineDotShapeCustomizer"/>
 		</element>
 		<element kind="chart" chartType="line" uuid="f9d96e82-d153-48da-b898-dedae0b19203" x="0" y="190" width="554" height="168" evaluationTime="Report">
 			<titleFont fontName="Sarabun Thin"/>
@@ -623,7 +269,6 @@ ORDER BY
 			<property name="net.sf.jasperreports.customizer.0.shapeType" value="ellipse"/>
 			<property name="net.sf.jasperreports.customizer.0.shapeWidth" value="4"/>
 			<property name="net.sf.jasperreports.customizer.0.shapeHeight" value="6"/>
-			<property name="net.sf.jasperreports.customizer.class.0" value="net.sf.jasperreports.customizers.shape.LineDotShapeCustomizer"/>
 		</element>
 		<element kind="chart" chartType="bar" uuid="81cdc9a6-6674-4d2c-9be2-b3615650f332" positionType="Float" x="0" y="530" width="554" height="190" evaluationTime="Report">
 			<titleFont fontName="Sarabun Thin"/>
