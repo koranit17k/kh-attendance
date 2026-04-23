@@ -623,7 +623,7 @@ $F{total_workmin}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
 	<summary height="216" splitType="Stretch">
 		<element kind="chart" chartType="bar" uuid="25e1ea56-69a8-4f56-85fc-7d9f6f8d5341" x="0" y="18" width="290" height="160" showLegend="false" evaluationTime="Report" titlePosition="Top">
 			<titleFont fontName="Sarabun Light" fontSize="10.0" bold="false"/>
-			<titleExpression><![CDATA["10 อันดับพนักงานที่สายมากที่สุด"]]></titleExpression>
+			<titleExpression><![CDATA["10 อันดับพนักงานที่สายมากที่สุด (นาที)"]]></titleExpression>
 			<dataset kind="category">
 				<datasetRun uuid="474fc820-91ed-4efe-89ee-fcd79578a62d" subDataset="topLate">
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
@@ -654,9 +654,9 @@ $F{total_workmin}.doubleValue() / $F{working_days}.doubleValue()]]></expression>
 				<seriesColor order="0" color="#FFA14A"/>
 			</plot>
 		</element>
-		<element kind="chart" chartType="bar" uuid="dba3453d-8c58-4e8f-b5e5-d74738ef1b29" x="280" y="18" width="275" height="197" showLegend="false" evaluationTime="Report">
+		<element kind="chart" chartType="bar" uuid="dba3453d-8c58-4e8f-b5e5-d74738ef1b29" x="280" y="18" width="275" height="197" showLegend="false" evaluationTime="Report" linkType="None" linkTarget="Self">
 			<titleFont fontName="Sarabun Light"/>
-			<titleExpression><![CDATA["10 อันดับพนักงานที่ขาดมากที่สุด"]]></titleExpression>
+			<titleExpression><![CDATA["10 อันดับพนักงานที่ขาดมากที่สุด (วัน)"]]></titleExpression>
 			<dataset kind="category">
 				<datasetRun uuid="fbed144d-951c-4ba3-8d81-ae83dce5130a" subDataset="topAbsent">
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>

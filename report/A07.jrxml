@@ -191,7 +191,7 @@ ORDER BY
 		<element kind="chart" chartType="bar" uuid="efc634f5-7d52-48f9-a037-7467fd68b6f7" positionType="Float" x="0" y="0" width="554" height="150" showLegend="false" evaluationTime="Report" linkTarget="Self" theme="default">
 			<titleFont fontName="Sarabun Thin"/>
 			<legendFont fontName="Sarabun Thin"/>
-			<titleExpression><![CDATA["Late เฉลี่ย (นาที)"]]></titleExpression>
+			<titleExpression><![CDATA["จำนวนนาทีที่มาสายเฉลี่ย (นาที)"]]></titleExpression>
 			<dataset kind="category">
 				<series>
 					<seriesExpression><![CDATA[$F{company_name}]]></seriesExpression>
