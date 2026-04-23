@@ -97,7 +97,9 @@ const reportOptions = [
   { value: 'A02', label: '2 ตรวจสอบรายบุคคล' },
   { value: 'A03', label: '3 สรุปประจำเดือน' },
   { value: 'A04', label: '4 วิเคราะห์พนักงาน' },
-  { value: 'A05', label: '5 วิเคราะห์บริษัท' }
+  { value: 'A05', label: '5 วิเคราะห์บริษัท' },
+  { value: 'A06', label: '6 สรุปพนักงานสาย' },
+  { value: 'A07', label: '7 วิเคราะห์สาย' }
 ] as { value: string; label: string }[]
 
 const companyOptions = [

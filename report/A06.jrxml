@@ -13,93 +13,88 @@
 		<defaultValueExpression><![CDATA["01"]]></defaultValueExpression>
 	</parameter>
 	<query language="sql"><![CDATA[SELECT
-    c.comName As company_name,
+	e.Name ,
+    c.comName AS company_name,
+    v.late_morning_minutes,
+    v.late_lunch_minutes,
     v.comCode,
     STR_TO_DATE(v.dateAt, '%Y-%m-%d') AS work_date,
     DATE_FORMAT(STR_TO_DATE(v.dateAt, '%Y-%m-%d'), '%d/%m') AS day_label,
-
-    COUNT(DISTINCT e.empCode) AS total_employees,
+    COUNT(DISTINCT CASE
+        WHEN v.status IN ('FullDay','HalfDay')
+         AND (
+              COALESCE(v.late_morning_minutes, 0) > 0
+              OR COALESCE(v.late_lunch_minutes, 0) > 0
+         )
+        THEN e.empCode
+    END) AS late_employee_count,
     ROUND(
-        100 * SUM(v.status = 'FullDay') / NULLIF(COUNT(*), 0),
-        1
-    ) AS attendance_rate,
-    ROUND(
-        100 * SUM(v.status = 'HalfDay') / NULLIF(COUNT(*), 0),
-        1
-    ) AS half_day_rate,
-    ROUND(
-        100 * SUM(v.status = 'Absent') / NULLIF(COUNT(*), 0),
-        1
-    ) AS absent_rate,
-ROUND(
-    100 * SUM(
-        CASE
-            WHEN v.status IN ('FullDay','HalfDay')
-             AND (
-                  COALESCE(v.late_morning_minutes, 0) > 0
-                  OR COALESCE(v.late_lunch_minutes, 0) > 0
-             )
-            THEN 1
-            ELSE 0
-        END
-    ) / NULLIF(
         SUM(
             CASE
-                WHEN v.status IN ('FullDay','HalfDay') THEN 1
+                WHEN v.status IN ('FullDay','HalfDay') THEN
+                    COALESCE(v.late_morning_minutes, 0) +
+                    COALESCE(v.late_lunch_minutes, 0)
                 ELSE 0
             END
+        ) / NULLIF(
+            SUM(
+                CASE
+                    WHEN v.status IN ('FullDay','HalfDay')
+                     AND (
+                          COALESCE(v.late_morning_minutes, 0) > 0
+                          OR COALESCE(v.late_lunch_minutes, 0) > 0
+                     )
+                    THEN 1
+                    ELSE 0
+                END
+            ),
+            0
         ),
         0
-    ),
-    2
-) AS late_rate,
+    ) AS avg_late_minutes
 
-ROUND(
-    SUM(
-        CASE
-            WHEN v.status IN ('FullDay','HalfDay') THEN
-                COALESCE(v.late_morning_minutes, 0) +
-                COALESCE(v.late_lunch_minutes, 0)
-            ELSE 0
-        END
-    ) / NULLIF(
-        SUM(
-            CASE
-                WHEN v.status IN ('FullDay','HalfDay')
-                 AND (
-                      COALESCE(v.late_morning_minutes, 0) > 0
-                      OR COALESCE(v.late_lunch_minutes, 0) > 0
-                 )
-                THEN 1
-                ELSE 0
-            END
-        ),
-        0
-    ),
-    0
-) AS avg_late_minutes
 FROM attendance v
 JOIN employee e
     ON v.comCode = e.comCode
    AND v.empCode = e.empCode
 JOIN company c
-   ON c.comCode = e.comCode
-
-WHERE FIND_IN_SET(v.comCode, REPLACE($P{comCode}, ' ', '')) > 0
-  AND v.dateAt BETWEEN $P{startDate} AND $P{endDate}
-
+    ON c.comCode = e.comCode
+     WHERE FIND_IN_SET(v.comCode, REPLACE($P{comCode}, ' ', '')) > 0
+ AND v.dateAt BETWEEN $P{startDate} AND $P{endDate}
 GROUP BY
     v.comCode,
     c.comName,
     v.dateAt
-
+HAVING late_employee_count > 0
 ORDER BY
     v.comCode,
-    v.dateAt]]></query>
+    v.dateAt
+
+
+
+]]></query>
+	<field name="Name" class="java.lang.String">
+		<description><![CDATA[ชื่อจริง]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="name"/>
+		<property name="com.jaspersoft.studio.field.label" value="Name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+	</field>
 	<field name="company_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="comName"/>
 		<property name="com.jaspersoft.studio.field.label" value="company_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
+	</field>
+	<field name="late_morning_minutes" class="java.lang.Integer">
+		<description><![CDATA[จำนวนนาทีมาสาย เช้า]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="late_morning_minutes"/>
+		<property name="com.jaspersoft.studio.field.label" value="late_morning_minutes"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="late_lunch_minutes" class="java.lang.Integer">
+		<description><![CDATA[จำนวนนาทีมาสาย บ่าย/เที่ยง/ออกก่อนเวลางาน]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="late_lunch_minutes"/>
+		<property name="com.jaspersoft.studio.field.label" value="late_lunch_minutes"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="comCode" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="comCode"/>
@@ -114,25 +109,9 @@ ORDER BY
 		<property name="com.jaspersoft.studio.field.name" value="day_label"/>
 		<property name="com.jaspersoft.studio.field.label" value="day_label"/>
 	</field>
-	<field name="total_employees" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="total_employees"/>
-		<property name="com.jaspersoft.studio.field.label" value="total_employees"/>
-	</field>
-	<field name="attendance_rate" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.name" value="attendance_rate"/>
-		<property name="com.jaspersoft.studio.field.label" value="attendance_rate"/>
-	</field>
-	<field name="half_day_rate" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.name" value="half_day_rate"/>
-		<property name="com.jaspersoft.studio.field.label" value="half_day_rate"/>
-	</field>
-	<field name="absent_rate" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.name" value="absent_rate"/>
-		<property name="com.jaspersoft.studio.field.label" value="absent_rate"/>
-	</field>
-	<field name="late_rate" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.name" value="late_rate"/>
-		<property name="com.jaspersoft.studio.field.label" value="late_rate"/>
+	<field name="late_employee_count" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="late_employee_count"/>
+		<property name="com.jaspersoft.studio.field.label" value="late_employee_count"/>
 	</field>
 	<field name="avg_late_minutes" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="avg_late_minutes"/>
@@ -188,26 +167,16 @@ ORDER BY
 		</element>
 	</pageHeader>
 	<summary height="200" splitType="Stretch">
-		<element kind="chart" chartType="stackedBar" uuid="985a95a0-23a5-4bd4-b344-bb092f8c7907" x="0" y="0" width="554" height="200" evaluationTime="Report">
+		<element kind="chart" chartType="bar" uuid="f10265db-b20d-48d4-b136-96f902a507d3" x="0" y="0" width="554" height="200" showLegend="false" evaluationTime="Report" linkType="None" linkTarget="Self">
 			<titleFont fontName="Sarabun Thin"/>
 			<subtitleFont fontName="Sarabun Thin"/>
 			<legendFont fontName="Sarabun Thin"/>
-			<titleExpression><![CDATA["ภาพรวมการทำงานทั้งหมด (%)"]]></titleExpression>
+			<titleExpression><![CDATA["จำนวนพนักงานมาสาย (คน)"]]></titleExpression>
 			<dataset kind="category">
 				<series>
-					<seriesExpression><![CDATA["เต็มวัน"]]></seriesExpression>
+					<seriesExpression><![CDATA["จำนวนคนมาสาย"]]></seriesExpression>
 					<categoryExpression><![CDATA[$F{day_label}]]></categoryExpression>
-					<valueExpression><![CDATA[$F{attendance_rate}]]></valueExpression>
-				</series>
-				<series>
-					<seriesExpression><![CDATA["ครึ่งวัน"]]></seriesExpression>
-					<categoryExpression><![CDATA[$F{day_label}]]></categoryExpression>
-					<valueExpression><![CDATA[$F{half_day_rate}]]></valueExpression>
-				</series>
-				<series>
-					<seriesExpression><![CDATA["ขาด"]]></seriesExpression>
-					<categoryExpression><![CDATA[$F{day_label}]]></categoryExpression>
-					<valueExpression><![CDATA[$F{absent_rate}]]></valueExpression>
+					<valueExpression><![CDATA[$F{late_employee_count}]]></valueExpression>
 				</series>
 			</dataset>
 			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000" showLabels="true">
@@ -218,9 +187,9 @@ ORDER BY
 				<itemLabel>
 					<font fontName="Sarabun Thin"/>
 				</itemLabel>
-				<seriesColor order="0" color="#3DFF47"/>
-				<seriesColor order="1" color="#E5ED05"/>
-				<seriesColor order="2" color="#FF3729"/>
+				<seriesColor order="0" color="#3399FF"/>
+				<seriesColor order="1" color="#D905FA"/>
+				<seriesColor order="2" color="#FFDC52"/>
 			</plot>
 		</element>
 	</summary>

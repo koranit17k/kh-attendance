@@ -1,5 +1,5 @@
 <!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
-<jasperReport name="รายงานวิเคราะห์พนักงานสาย" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cce411a4-41e9-4188-a8b2-b6ac0c0ba3e8">
+<jasperReport name="รายงานวิเคราะห์สาย" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cce411a4-41e9-4188-a8b2-b6ac0c0ba3e8">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="payroll"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="report" class="java.lang.String"/>
@@ -187,27 +187,16 @@ ORDER BY
 			<expression><![CDATA[$F{company_name}]]></expression>
 		</element>
 	</pageHeader>
-	<summary height="200" splitType="Stretch">
-		<element kind="chart" chartType="stackedBar" uuid="985a95a0-23a5-4bd4-b344-bb092f8c7907" x="0" y="0" width="554" height="200" evaluationTime="Report">
+	<summary height="150" splitType="Stretch">
+		<element kind="chart" chartType="bar" uuid="efc634f5-7d52-48f9-a037-7467fd68b6f7" positionType="Float" x="0" y="0" width="554" height="150" showLegend="false" evaluationTime="Report" linkTarget="Self" theme="default">
 			<titleFont fontName="Sarabun Thin"/>
-			<subtitleFont fontName="Sarabun Thin"/>
 			<legendFont fontName="Sarabun Thin"/>
-			<titleExpression><![CDATA["ภาพรวมการทำงานทั้งหมด (%)"]]></titleExpression>
+			<titleExpression><![CDATA["Late เฉลี่ย (นาที)"]]></titleExpression>
 			<dataset kind="category">
 				<series>
-					<seriesExpression><![CDATA["เต็มวัน"]]></seriesExpression>
+					<seriesExpression><![CDATA[$F{company_name}]]></seriesExpression>
 					<categoryExpression><![CDATA[$F{day_label}]]></categoryExpression>
-					<valueExpression><![CDATA[$F{attendance_rate}]]></valueExpression>
-				</series>
-				<series>
-					<seriesExpression><![CDATA["ครึ่งวัน"]]></seriesExpression>
-					<categoryExpression><![CDATA[$F{day_label}]]></categoryExpression>
-					<valueExpression><![CDATA[$F{half_day_rate}]]></valueExpression>
-				</series>
-				<series>
-					<seriesExpression><![CDATA["ขาด"]]></seriesExpression>
-					<categoryExpression><![CDATA[$F{day_label}]]></categoryExpression>
-					<valueExpression><![CDATA[$F{absent_rate}]]></valueExpression>
+					<valueExpression><![CDATA[$F{avg_late_minutes}]]></valueExpression>
 				</series>
 			</dataset>
 			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000" showLabels="true">
@@ -218,9 +207,9 @@ ORDER BY
 				<itemLabel>
 					<font fontName="Sarabun Thin"/>
 				</itemLabel>
-				<seriesColor order="0" color="#3DFF47"/>
-				<seriesColor order="1" color="#E5ED05"/>
-				<seriesColor order="2" color="#FF3729"/>
+				<seriesColor order="0" color="#FFBC6B"/>
+				<seriesColor order="1" color="#7A93FF"/>
+				<seriesColor order="2" color="#24B504"/>
 			</plot>
 		</element>
 	</summary>
