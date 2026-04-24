@@ -39,7 +39,6 @@ const updateChart = () => {
   const fullDays = data.value.map(item => item.fullDay)
   const halfDays = data.value.map(item => item.halfDay)
   const absents = data.value.map(item => item.absent)
-  const lates = data.value.map(item => item.late)
 
   const option = {
     backgroundColor: 'transparent',
@@ -56,7 +55,7 @@ const updateChart = () => {
       axisPointer: { type: 'shadow' }
     },
     legend: {
-      data: ['เต็มวัน', 'ครึ่งวัน', 'ขาด', 'มาสาย'],
+      data: ['เต็มวัน', 'ครึ่งวัน', 'ขาด'],
       bottom: 0,
       textStyle: {
         fontSize: 14
@@ -117,19 +116,6 @@ const updateChart = () => {
         stack: 'total',
         data: absents,
         itemStyle: { color: '#ef4444' }, // red-500
-        label: { 
-          show: true, 
-          position: 'inside',
-          fontSize: 12,
-          formatter: (params: any) => params.value > 0 ? params.value : ''
-        }
-      },
-      {
-        name: 'มาสาย',
-        type: 'bar',
-        stack: 'total',
-        data: lates,
-        itemStyle: { color: '#8b5cf6' }, // violet-500
         label: { 
           show: true, 
           position: 'inside',

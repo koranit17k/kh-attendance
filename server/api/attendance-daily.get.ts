@@ -6,7 +6,6 @@ interface DailyAttendanceRow extends RowDataPacket {
   fullDay: number
   halfDay: number
   absent: number
-  late: number
 }
 
 function getTodayBangkok() {
@@ -33,8 +32,7 @@ export default defineEventHandler(async (event) => {
       dateAt,
       COUNT(CASE WHEN status = 'FullDay' THEN 1 END) AS fullDay,
       COUNT(CASE WHEN status = 'HalfDay' THEN 1 END) AS halfDay,
-      COUNT(CASE WHEN status = 'Absent' THEN 1 END) AS absent,
-      COUNT(CASE WHEN late_morning_minutes > 0 OR late_lunch_minutes > 0 THEN 1 END) AS late
+      COUNT(CASE WHEN status = 'Absent' THEN 1 END) AS absent
     FROM attendance
     WHERE dateAt BETWEEN ? AND ?
     GROUP BY dateAt
