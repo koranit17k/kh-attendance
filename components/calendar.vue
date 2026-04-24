@@ -106,17 +106,14 @@ function getColorByDate(date: Date) {
     <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 mt-2">
       <div class="flex items-center gap-2">
         <span class="w-3 h-3 rounded-full bg-green-500" />
-        <span class="text-sm text-gray-600 dark:text-gray-400 font-medium">มาเกิน 80%</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 font-medium">พนักงานมาทำงานเกิน 80%</span>
       </div>
 
       <div class="flex items-center gap-2">
         <span class="w-3 h-3 rounded-full bg-red-500" />
         <span class="text-sm text-gray-600 dark:text-gray-400 font-medium">พนักงานขาดเกิน 20%</span>
       </div>
-      <div class="flex items-center gap-2">
-        <span class="w-3 h-3 rounded-full bg-gray-400" />
-        <span class="text-sm text-gray-600 dark:text-gray-400 font-medium">ยังไม่บันทึกข้อมูล</span>
-      </div>
+
     </div>
 
     <div v-if="$slots.links" class="flex flex-wrap items-center justify-center gap-4 mt-6">
