@@ -51,15 +51,9 @@ const endDateStr = computed({
   }
 })
 
-const { data: counterData } = await useFetch<{ value: number, dates: string[] }>('/api/calendar')
+const { data: counterData } = await useFetch<{ stats: Record<string, 'success' | 'error'> }>('/api/calendar')
 
-const highlightedDates = computed(() => {
-  if (!counterData.value?.dates) return new Set<string>()
-  return new Set(counterData.value.dates.map(d => {
-    const date = new Date(d)
-    return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')}`
-  }))
-})
+const dateStats = computed(() => counterData.value?.stats || {})
 
 function getColorByDate(date: Date) {
   // Use UTC components to match the date object from toDate('UTC')
@@ -76,17 +70,13 @@ function getColorByDate(date: Date) {
     return undefined
   }
 
-  // If date is today, return neutral
-  if (dateStr === todayStr) {
-    return 'neutral'
+  // If we have data for this date, use its status
+  if (dateStats.value[dateStr]) {
+    return dateStats.value[dateStr]
   }
 
-  // If date is in the past, return success if highlighted, error if not
-  if (highlightedDates.value.has(dateStr)) {
-    return 'success'
-  }
-
-  return 'error'
+  // If date is in the past and has no data, return neutral
+  return 'neutral'
 }
 </script>
 
@@ -112,6 +102,22 @@ function getColorByDate(date: Date) {
         </UChip>
       </template>
     </UCalendar>
+
+    <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 mt-2">
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-green-500" />
+        <span class="text-sm text-gray-600 dark:text-gray-400 font-medium">มาเกิน 80%</span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-red-500" />
+        <span class="text-sm text-gray-600 dark:text-gray-400 font-medium">พนักงานขาดเกิน 20%</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-gray-400" />
+        <span class="text-sm text-gray-600 dark:text-gray-400 font-medium">ยังไม่บันทึกข้อมูล</span>
+      </div>
+    </div>
 
     <div v-if="$slots.links" class="flex flex-wrap items-center justify-center gap-4 mt-6">
       <slot name="links" />

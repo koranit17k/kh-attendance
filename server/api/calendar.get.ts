@@ -21,21 +21,23 @@ export default defineEventHandler(async () => {
         totalCount: number | string 
     }>
 
-    // Threshold: Absent rate > 50% means Red (Error)
-    // We only return "Green" (Success) dates where Absent rate <= 50%
-    const greenDates = records
-        .filter(record => {
-            const absent = Number(record.absentCount)
-            const total = Number(record.totalCount)
-            
-            if (total === 0) return false
-            
+    // Threshold: Absent rate > 20% means Red (Error)
+    const dateStats: Record<string, 'success' | 'error'> = {}
+    
+    records.forEach(record => {
+        const absent = Number(record.absentCount)
+        const total = Number(record.totalCount)
+        
+        if (total > 0) {
             const absentRate = absent / total
-            return absentRate <= 0.35 // Success only if 35% or less are absent
-        })
-        .map(record => record.dateAt)
+            const date = new Date(record.dateAt)
+            const dateStr = `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')}`
+            
+            dateStats[dateStr] = absentRate <= 0.20 ? 'success' : 'error'
+        }
+    })
 
     return {
-        dates: greenDates
+        stats: dateStats
     }
 })
