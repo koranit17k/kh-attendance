@@ -393,7 +393,7 @@ new java.text.SimpleDateFormat("dd/MM/yyyy")
 	<detail>
 		<band height="16" splitType="Stretch">
 			<element kind="textField" uuid="325fdd72-6764-487b-aa29-58d2d4876fb4" x="20" y="0" width="44" height="16" fontName="Sarabun Thin" vTextAlign="Bottom">
-				<expression><![CDATA[$F{scanCode}]]></expression>
+				<expression><![CDATA[$F{empCode}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d51971cc-1324-4959-b432-9a6ff138b4a8"/>
 				<box leftPadding="5"/>
 			</element>

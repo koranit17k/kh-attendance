@@ -134,3 +134,6 @@ values -- 1. Normal 1
     (@emp_code, '2000-01-29 13:01:00'),
     -- 30. Absent 6
     (@emp_code, '2000-01-30 11:15:00');
+    -- 31. Reproduction Case
+    (@emp_code, '2000-01-31 07:54:00'),
+    (@emp_code, '2000-01-31 14:44:00');

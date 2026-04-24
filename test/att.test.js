@@ -192,6 +192,12 @@ const testCases = [
         scans: ["11:15:00"],
         exp: { work: 0, lunch: 0, ot: 0, late1: 0, late2: 0, mlunch: 0 },
     },
+    {
+        id: 31,
+        scenario: "Reproduction: HalfDay Morning missing lunch_out",
+        scans: ["07:54:00", "14:44:00"],
+        exp: { work: 240, lunch: 0, ot: 0, late1: 0, late2: 0, mlunch: 0 },
+    },
 ]
 
 describe("Attendance System Verification (Year 3000)", () => {
