@@ -172,6 +172,7 @@ create table `attendance` (
     `late_lunch_minutes` smallint default null COMMENT 'จำนวนนาทีมาสาย บ่าย/เที่ยง/ออกก่อนเวลางาน',
     `work_minutes` smallint default null COMMENT 'จำนวนนาทีทำงาน',
     `ot_total_minutes` smallint default null COMMENT 'จำนวนนาทีล่วงเวลา',
+    `missing_lunch_minutes` smallint default null COMMENT 'จำนวนนาทีหักกรณีลืมสแกนพักเที่ยง',
     `count` tinyint COMMENT 'จำนวนครั้งที่สแกน',
     `rawTime` varchar(60) default null COMMENT 'เวลาที่สแกน',
     `reason` VARCHAR(255),

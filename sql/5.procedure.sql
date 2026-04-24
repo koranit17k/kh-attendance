@@ -61,10 +61,12 @@ BEGIN
     JOIN vAttendance v ON t.comCode = v.comCode
     AND t.empCode = v.empCode
     AND t.dateAt = v.dateAt
+    SET
     t.status = v.status,
     t.lunch_minutes = v.lunchMin,
     t.late_morning_minutes = v.lateMin1,
     t.late_lunch_minutes = v.lateMin2,
+    t.missing_lunch_minutes = v.mlunch,
     t.work_minutes = v.workMin,
     t.ot_total_minutes = v.otMin,
     t.modified_at = NOW(),

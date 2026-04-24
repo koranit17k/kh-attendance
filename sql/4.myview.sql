@@ -2,8 +2,8 @@ create or replace view `vAttendance` as
 select
     `v2`.*,
     case
-        when v2.status = 'FullDay' then v2.fullWorkMin - v2.lateMin1 - v2.lateMin2
-        when v2.status = 'HalfDay' then v2.halfWorkMin - v2.lateMin1 - v2.lateMin2
+        when v2.status = 'FullDay' then v2.fullWorkMin - v2.lateMin1 - v2.lateMin2 - v2.mlunch
+        when v2.status = 'HalfDay' then v2.halfWorkMin - v2.lateMin1 - v2.lateMin2 - v2.mlunch
         else 0
     end as workMin
 from
@@ -12,7 +12,8 @@ from
             `v`.*,
             greatest(0, coalesce(v.morning_m, v.fullWorkMin) - v.fullWorkMin) as lateMin1,
             if (
-                v.lunch_out_m is null
+                (v.status = 'HalfDay' and v.night_m is null and v.early_m is null)
+                or v.lunch_out_m is null
                 or v.lunch_in_m is null
                 or v.lunch_out_m = v.lunch_in_m,
                 0,
@@ -23,12 +24,7 @@ from
                     v.lunch_out_m is null
                     or v.lunch_in_m is null
                     or v.lunch_out_m = v.lunch_in_m,
-                    if (
-                        v.lunch_out_m is null
-                        and v.lunch_in_m is null,
-                        v.halfWorkMin,
-                        v.halfWorkMin / 2
-                    ),
+                    0,
                     greatest(0, v.lunch_in_m - v.lunch_out_m - 60)
                 ) + if (
                     v.night_m is null
@@ -56,6 +52,21 @@ from
                 )
                 else 0
             end as lateMin2,
+            case
+                when v.status = 'FullDay' then if (
+                    v.lunch_out_m is null
+                    or v.lunch_in_m is null
+                    or v.lunch_out_m = v.lunch_in_m,
+                    if (
+                        v.lunch_out_m is null
+                        and v.lunch_in_m is null,
+                        v.halfWorkMin,
+                        v.halfWorkMin / 2
+                    ),
+                    0
+                )
+                else 0
+            end as mlunch,
             if (
                 v.morning_m is null
                 or (
