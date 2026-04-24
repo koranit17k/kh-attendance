@@ -1,14 +1,5 @@
 ::u-page-hero{title="ระบบตรวจสอบเวลาการทำงาน" }
 
-::div{class="flex justify-center"}
-:::u-button{color="neutral" size="xl" class="text-2xl px-8 py-4 mt-2 mx-auto flex w-fit" to="/project-kh-att/workflow"}
-enter site
-:::
-::
-
-::calendar{full}
-::
-
 ::attend-sum
 ::
 
@@ -18,6 +9,15 @@ enter site
   ::
   ::company-pie-chart
   ::
+:::
+::
+
+::calendar{full}
+::
+
+::div{class="flex justify-center"}
+:::u-button{color="neutral" size="xl" class="text-2xl px-8 py-4 mt-2 mx-auto flex w-fit" to="/project-kh-att/workflow"}
+enter site
 :::
 ::
 
