@@ -12,13 +12,17 @@ export default defineEventHandler(async (event) => {
   const oneMinute = 60 * 1000
 
   if (!lastVisit || now - lastVisit >= oneMinute) {
-    await pool.execute(
-      'UPDATE counter SET `value` = `value` + 1, created_at = NOW() LIMIT 1'
-    )
+    try {
+      await pool.execute(
+        'UPDATE counter SET `value` = `value` + 1, created_at = NOW() LIMIT 1'
+      )
 
-    setCookie(event, 'last_visit', String(now), {
-      maxAge: 60,
-      path: '/'
-    })
+      setCookie(event, 'last_visit', String(now), {
+        maxAge: 60,
+        path: '/'
+      })
+    } catch (error) {
+      console.error('Database session counter error:', error)
+    }
   }
 })
