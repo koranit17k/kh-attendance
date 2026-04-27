@@ -40,7 +40,7 @@ async function fetchCompanies() {
   }
 }
 
-async function fetchEmployees(reset = false) {
+async function fetchEmployee(reset = false) {
   if (reset) {
     data.value = []
     hasMore.value = true
@@ -49,7 +49,7 @@ async function fetchEmployees(reset = false) {
   loading.value = true
   
   try {
-    const newData = await $fetch<Employee[]>('/api/employees', {
+    const newData = await $fetch<Employee[]>('/api/employee', {
       query: {
         limit: 50,
         offset: data.value.length,
@@ -64,14 +64,14 @@ async function fetchEmployees(reset = false) {
     
     data.value.push(...newData)
   } catch (error) {
-    console.error('Failed to fetch employees:', error)
+    console.error('Failed to fetch employee:', error)
   } finally {
     loading.value = false
   }
 }
 
 const debouncedFetch = useDebounceFn(() => {
-  fetchEmployees(true)
+  fetchEmployee(true)
 }, 500)
 
 watch(globalFilter, () => {
@@ -79,25 +79,32 @@ watch(globalFilter, () => {
 })
 
 watch(selectedCompany, () => {
-  fetchEmployees(true)
+  fetchEmployee(true)
 })
 
 useIntersectionObserver(sentinel, (entries) => {
   if (entries[0]?.isIntersecting && !loading.value && hasMore.value) {
-    fetchEmployees()
+    fetchEmployee()
   }
 })
 
 onMounted(() => {
   fetchCompanies()
-  fetchEmployees()
+  fetchEmployee()
 })
+
+const router = useRouter()
+
+function onRowClick(_: any, row: any) {
+  const empCode = row.original.empCode
+  router.push(`/attendance/edit-employee?empCode=${empCode}`)
+}
 
 const columns: TableColumn<Employee>[] = [
   {
     accessorKey: 'empCode',
     header: 'Code',
-    cell: ({ row }) => `#${row.getValue('empCode')}`
+    cell: ({ row }) => `${row.getValue('empCode')}`
   },
   {
     accessorKey: 'name',
@@ -147,26 +154,32 @@ const columns: TableColumn<Employee>[] = [
       <UInput 
         v-model="globalFilter" 
         class="flex-1" 
-        placeholder="Search employees..." 
+        placeholder="Search employee..." 
         icon="i-lucide-search"
       />
     </div>
 
-    <UTable 
-      ref="table" 
-      v-model:global-filter="globalFilter" 
-      :data="data" 
-      :columns="columns" 
-      :virtualize="{ estimateSize: 48 }"
-      class="flex-1 overflow-auto"
-    >
-      <template #body-bottom>
-        <div ref="sentinel" class="p-4 flex justify-center w-full">
-          <UIcon v-if="loading" name="i-lucide-loader-2" class="animate-spin h-5 w-5 text-primary" />
-          <span v-else-if="hasMore" class="text-sm text-muted-foreground italic">Scroll for more</span>
-          <span v-else-if="data.length > 0" class="text-sm text-muted-foreground">End of list</span>
-        </div>
-      </template>
-    </UTable>
+    <ClientOnly>
+      <UTable 
+        ref="table" 
+        v-model:global-filter="globalFilter" 
+        :data="data" 
+        :columns="columns" 
+        :virtualize="{ estimateSize: 48 }"
+        :ui="{ 
+          tr: 'hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer' 
+        }"
+        @select="onRowClick"
+        class="flex-1 overflow-auto"
+      >
+        <template #body-bottom>
+          <div ref="sentinel" class="p-4 flex justify-center w-full">
+            <UIcon v-if="loading" name="i-lucide-loader-2" class="animate-spin h-5 w-5 text-primary" />
+            <span v-else-if="hasMore" class="text-sm text-muted-foreground italic">Scroll for more</span>
+            <span v-else-if="data.length > 0" class="text-sm text-muted-foreground">End of list</span>
+          </div>
+        </template>
+      </UTable>
+    </ClientOnly>
   </div>
 </template>
