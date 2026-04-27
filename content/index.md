@@ -16,7 +16,7 @@
 ::
 
 ::div{class="flex justify-center"}
-:::u-button{color="neutral" size="xl" class="text-2xl px-8 py-4 mt-2 mx-auto flex w-fit" to="/project-kh-att/workflow"}
+:::u-button{color="neutral" size="xl" class="text-2xl px-8 py-4 mt-2 mx-auto flex w-fit" to="/attendance/report"}
 enter site
 :::
 ::
@@ -31,7 +31,7 @@ enter site
 ---
 icon: i-simple-icons-nuxt
 target: _blank
-to: /project-kh-att/workflow
+to: /workprocess/workflow
 ---
 #title
 [ขั้นตอนการทำงาน]{.text-primary .text-2xl}
