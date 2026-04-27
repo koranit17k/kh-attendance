@@ -97,11 +97,10 @@ onMounted(() => {
   fetchEmployee()
 })
 
-const router = useRouter()
+const sharedEmpCode = useState<number | null>('selectedEmpCode', () => null)
 
 function onRowClick(_: any, row: any) {
-  const empCode = row.original.empCode
-  router.push(`/attendance/edit-employee?empCode=${empCode}`)
+  sharedEmpCode.value = row.original.empCode
 }
 
 const columns: TableColumn<Employee>[] = [
