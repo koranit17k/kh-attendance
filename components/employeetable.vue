@@ -11,6 +11,7 @@ type Employee = {
   beginDate: string | null
   endDate: string | null
   timeCode: number | null
+  comCode: string
 }
 
 type Company = {
@@ -23,6 +24,7 @@ const data = ref<Employee[]>([])
 const loading = ref(false)
 const sentinel = ref<HTMLElement | null>(null)
 const hasMore = ref(true)
+const totalCount = ref(0)
 
 const companies = ref<Company[]>([])
 const selectedCompany = ref<string>('')
@@ -44,12 +46,13 @@ async function fetchEmployee(reset = false) {
   if (reset) {
     data.value = []
     hasMore.value = true
+    totalCount.value = 0
   }
   if (loading.value || !hasMore.value) return
   loading.value = true
   
   try {
-    const newData = await $fetch<Employee[]>('/api/employee', {
+    const res = await $fetch<{ rows: Employee[], total: number }>('/api/employee', {
       query: {
         limit: 50,
         offset: data.value.length,
@@ -58,11 +61,12 @@ async function fetchEmployee(reset = false) {
       }
     })
     
-    if (newData.length < 50) {
+    if (res.rows.length < 50) {
       hasMore.value = false
     }
     
-    data.value.push(...newData)
+    data.value.push(...res.rows)
+    totalCount.value = res.total
   } catch (error) {
     console.error('Failed to fetch employee:', error)
   } finally {
@@ -102,8 +106,12 @@ function onRowClick(_: any, row: any) {
 
 const columns: TableColumn<Employee>[] = [
   {
+    accessorKey: 'comCode',
+    header: 'ComCode'
+  },
+  {
     accessorKey: 'empCode',
-    header: 'Code',
+    header: 'EmpCode',
     cell: ({ row }) => `${row.getValue('empCode')}`
   },
   {
@@ -112,7 +120,7 @@ const columns: TableColumn<Employee>[] = [
   },
   {
     accessorKey: 'beginDate',
-    header: 'Begin Date',
+    header: 'BeginDate',
     cell: ({ row }) => {
       const val = row.getValue('beginDate')
       return val ? new Date(val as string).toLocaleDateString() : '-'
@@ -120,7 +128,7 @@ const columns: TableColumn<Employee>[] = [
   },
   {
     accessorKey: 'endDate',
-    header: 'End Date',
+    header: 'EndDate',
     cell: ({ row }) => {
       const val = row.getValue('endDate')
       return val ? new Date(val as string).toLocaleDateString() : '-'
@@ -128,7 +136,7 @@ const columns: TableColumn<Employee>[] = [
   },
   {
     accessorKey: 'timeCode',
-    header: 'Time Code',
+    header: 'TimeCode',
     cell: ({ row }) => {
       const val = row.getValue('timeCode')
       return val ? h(UBadge, { variant: 'subtle', color: 'neutral' }, () => val) : '-'
@@ -154,9 +162,13 @@ const columns: TableColumn<Employee>[] = [
       <UInput 
         v-model="globalFilter" 
         class="flex-1" 
-        placeholder="Search employee..." 
+        placeholder="Search EmpCode or Name..." 
         icon="i-lucide-search"
       />
+
+      <div class="text-sm text-gray-500 whitespace-nowrap">
+        Total: <span class="font-bold text-gray-900 dark:text-white">{{ totalCount.toLocaleString() }}</span>
+      </div>
     </div>
 
     <ClientOnly>
@@ -165,9 +177,11 @@ const columns: TableColumn<Employee>[] = [
         v-model:global-filter="globalFilter" 
         :data="data" 
         :columns="columns" 
-        :virtualize="{ estimateSize: 48 }"
+        :virtualize="{ estimateSize: 40 }"
         :ui="{ 
-          tr: 'hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer' 
+          tr: 'hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer',
+          td: 'py-1.5',
+          th: 'py-2.5'
         }"
         @select="onRowClick"
         class="flex-1 overflow-auto"

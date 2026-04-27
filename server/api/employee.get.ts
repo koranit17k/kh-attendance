@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
   const comCode = query.comCode as string
   const q = query.q as string
 
-  let sql = `SELECT empCode, name, beginDate, endDate, timeCode 
+  let sql = `SELECT comCode, empCode, name, beginDate, endDate, timeCode
              FROM employee`
   const params: any[] = []
   const conditions: string[] = []
@@ -27,19 +27,27 @@ export default defineEventHandler(async (event) => {
   }
 
   if (q) {
-    conditions.push('(name LIKE ? OR empCode LIKE ? OR beginDate LIKE ? OR endDate LIKE ? OR timeCode LIKE ?)')
-    const search = `%${q}%`
-    params.push(search, search, search, search, search)
+    conditions.push('(name LIKE ? OR empCode = ?)')
+    params.push(`%${q}%`, `${q}`)
   }
 
+  let whereClause = ''
   if (conditions.length > 0) {
-    sql += ' WHERE ' + conditions.join(' AND ')
+    whereClause = ' WHERE ' + conditions.join(' AND ')
   }
 
-  sql += ' ORDER BY empCode ASC LIMIT ? OFFSET ?'
+  // Count total matching rows
+  const [countRows] = await pool.execute<any[]>(`SELECT COUNT(*) as total FROM employee ${whereClause}`, params)
+  const total = countRows[0].total
+
+  // Get paginated rows
+  sql += whereClause + ' ORDER BY comCode ASC, empCode ASC LIMIT ? OFFSET ?'
   params.push(limit, offset)
 
   const [rows] = await pool.execute<EmployeeRow[]>(sql, params)
 
-  return rows
+  return {
+    rows,
+    total
+  }
 })
