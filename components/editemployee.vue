@@ -4,8 +4,10 @@ const props = defineProps<{
 }>()
 
 const sharedEmpCode = useState<string | number | null>('selectedEmpCode', () => null)
+const sharedComCode = useState<string | null>('selectedComCode', () => null)
 const route = useRoute()
 const effectiveEmpCode = computed(() => props.empCode || sharedEmpCode.value || route.query.empCode)
+const effectiveComCode = computed(() => sharedComCode.value || route.query.comCode)
 
 const employee = ref<any>(null)
 const employeeBackup = ref<any>(null)
@@ -64,6 +66,7 @@ async function fetchEmployee() {
     const res = await $fetch<{ rows: any[] }>('/api/employee', {
       query: {
         q: effectiveEmpCode.value,
+        comCode: effectiveComCode.value,
         limit: 1
       }
     })
@@ -95,7 +98,7 @@ onMounted(() => {
   fetchEmployee()
 })
 
-watch(() => effectiveEmpCode.value, () => {
+watch(() => [effectiveEmpCode.value, effectiveComCode.value], () => {
   fetchEmployee()
 })
 </script>

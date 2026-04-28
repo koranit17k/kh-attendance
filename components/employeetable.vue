@@ -98,9 +98,16 @@ onMounted(() => {
 })
 
 const sharedEmpCode = useState<number | null>('selectedEmpCode', () => null)
+const sharedComCode = useState<string | null>('selectedComCode', () => null)
 
-function onRowClick(_: any, row: any) {
-  sharedEmpCode.value = row.original.empCode
+function onRowClick(event: any, row: any) {
+  const empCode = row?.original?.empCode || row?.empCode
+  const comCode = row?.original?.comCode || row?.comCode
+  
+  if (empCode && comCode) {
+    sharedEmpCode.value = Number(empCode)
+    sharedComCode.value = comCode
+  }
 }
 
 const columns: TableColumn<Employee>[] = [
@@ -195,7 +202,6 @@ const columns: TableColumn<Employee>[] = [
     <ClientOnly>
       <UTable 
         ref="table" 
-        v-model:global-filter="globalFilter" 
         :data="data" 
         :columns="columns" 
         :virtualize="{ estimateSize: 40 }"
