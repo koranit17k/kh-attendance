@@ -28,6 +28,7 @@ function cancelEdit() {
 }
 
 const toast = useToast()
+const refreshTrigger = useState<number>('employeeRefreshTrigger', () => 0)
 
 async function handleUpdate() {
   isUpdating.value = true
@@ -42,6 +43,8 @@ async function handleUpdate() {
       color: 'success'
     })
     isEditing.value = false
+    // Trigger table refresh
+    refreshTrigger.value++
   } catch (error: any) {
     console.error('Failed to update employee details:', error)
     toast.add({

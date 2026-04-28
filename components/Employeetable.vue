@@ -99,6 +99,7 @@ onMounted(() => {
 
 const sharedEmpCode = useState<number | null>('selectedEmpCode', () => null)
 const sharedComCode = useState<string | null>('selectedComCode', () => null)
+const refreshTrigger = useState<number>('employeeRefreshTrigger', () => 0)
 
 function onRowClick(event: any, row: any) {
   const empCode = row?.original?.empCode || row?.empCode
@@ -109,6 +110,12 @@ function onRowClick(event: any, row: any) {
     sharedComCode.value = comCode
   }
 }
+
+// Watch for refresh trigger from editemployee component
+watch(refreshTrigger, () => {
+  console.log('refresh1')
+  fetchEmployee(true)
+})
 
 const columns: TableColumn<Employee>[] = [
   {

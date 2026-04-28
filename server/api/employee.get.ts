@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
   const offset = parseInt(query.offset as string) || 0
   const comCode = query.comCode as string
   const q = query.q as string
-
+  console.log("call api employee", { limit, offset, comCode, q })
   let sql = `SELECT comCode, empCode, name, beginDate, endDate, timeCode
              FROM employee`
   const params: any[] = []
