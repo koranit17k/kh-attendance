@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 import { today, getLocalTimeZone } from '@internationalized/date'
 
 const rangeState = useState<{ start: string, end: string }>('attendance-range', () => ({
@@ -101,15 +101,14 @@ const reportOptions = [
   { value: 'A06', label: '6 สรุปพนักงานสาย' }
 ] as { value: string; label: string }[]
 
-const companyOptions = [
-  { value: '01', label: '1 กี่หิ้น การไฟฟ้าภูเก็ต' },
-  { value: '02', label: '2 บ้านสุขภัณฑ์และวัสดุ' },
-  { value: '03', label: '3 กี่หิ้น เทรดดิ้งจำกัด' },
-  { value: '04', label: '4 เคบีคอมเมิร์ซจำกัด' },
-  { value: '05', label: '5 กี่หิ้น เวอร์คชอพจำกัด' },
-  { value: '06', label: '6 กี่หิ้น คอนเทร็คเตอร์จำกัด' },
-  { value: '07', label: '7 พนักงานจ้าง' }
-]
+const { data: rawCompanies } = await useFetch<any[]>('/api/company')
+
+const companyOptions = computed(() => {
+  return (rawCompanies.value || []).map((c: any) => ({
+    value: c.comCode,
+    label: `${parseInt(c.comCode)} ${c.comName}`
+  }))
+})
 
 const validateForm = () => {
   if (!form.report || form.comCode.length === 0) {

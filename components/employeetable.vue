@@ -122,7 +122,13 @@ const columns: TableColumn<Employee>[] = [
     header: 'BeginDate',
     cell: ({ row }) => {
       const val = row.getValue('beginDate')
-      return val ? new Date(val as string).toLocaleDateString() : '-'
+      if (!val) return '-'
+      const d = new Date(val as string)
+      if (isNaN(d.getTime())) return '-'
+      const year = d.getFullYear()
+      const month = String(d.getMonth() + 1).padStart(2, '0')
+      const day = String(d.getDate()).padStart(2, '0')
+      return `${year}-${month}-${day}`
     }
   },
   {
@@ -130,7 +136,13 @@ const columns: TableColumn<Employee>[] = [
     header: 'EndDate',
     cell: ({ row }) => {
       const val = row.getValue('endDate')
-      return val ? new Date(val as string).toLocaleDateString() : '-'
+      if (!val) return '-'
+      const d = new Date(val as string)
+      if (isNaN(d.getTime())) return '-'
+      const year = d.getFullYear()
+      const month = String(d.getMonth() + 1).padStart(2, '0')
+      const day = String(d.getDate()).padStart(2, '0')
+      return `${year}-${month}-${day}`
     }
   },
   {
@@ -146,7 +158,7 @@ const columns: TableColumn<Employee>[] = [
 
 <template>
   <div class="flex flex-col h-[calc(100vh-200px)] w-full bg-background">
-    <div class="flex px-4 py-3.5 border-b border-accented shrink-0 gap-4 items-center bg-gray-50/50 dark:bg-gray-900/50">
+    <div class="flex px-4 py-3.5 border-b border-gray-200 dark:border-gray-800 shrink-0 gap-4 items-center bg-gray-50/50 dark:bg-gray-900/50">
       <USelectMenu 
         v-model="selectedCompany" 
         :items="companies" 
@@ -165,8 +177,18 @@ const columns: TableColumn<Employee>[] = [
         icon="i-lucide-search"
       />
 
-      <div class="text-sm text-gray-500 whitespace-nowrap">
-        Total: <span class="font-bold text-gray-900 dark:text-white">{{ totalCount.toLocaleString() }}</span>
+      <div class="flex items-center gap-2">
+        <div class="text-sm text-gray-500 whitespace-nowrap">
+          Total: <span class="font-bold text-gray-900 dark:text-white">{{ totalCount.toLocaleString() }}</span>
+        </div>
+        <UButton 
+          icon="i-lucide-rotate-cw" 
+          variant="outline" 
+          color="primary" 
+          size="xs" 
+          :loading="loading"
+          @click="fetchEmployee(true)" 
+        />
       </div>
     </div>
 
