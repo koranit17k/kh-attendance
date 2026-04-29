@@ -110,7 +110,7 @@ watch(() => [effectiveEmpCode.value, effectiveComCode.value], () => {
     </div>
 
     <template v-else-if="employee">
-      <UCard class="overflow-hidden border-none shadow-lg ring-1 ring-gray-200 dark:ring-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl">
+      <UCard class="overflow-hidden shadow-lg ring-1 ring-gray-200 dark:ring-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl">
         <template #header>
           <div class="flex justify-end">
             <UButton class="w-24 justify-center" color="primary" variant="soft" @click="isEditing ? cancelEdit() : startEdit()">

@@ -44,7 +44,7 @@ const companies = computed(() =>
 )
 
 // SSR: fetch employees with reactive query (auto-refetch on param change)
-const { data: employeeData, pending: loading, refresh } = useLazyFetch<{ rows: Employee[], total: number }>('/api/employee', {
+const { data: employeeData, pending: loading, refresh } =  useLazyFetch<{ rows: Employee[], total: number }>('/api/employee', {
   query: computed(() => ({
     limit: pageCount,
     page: page.value,
