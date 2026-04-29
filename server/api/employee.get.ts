@@ -12,10 +12,11 @@ interface EmployeeRow extends RowDataPacket {
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   const limit = parseInt(query.limit as string) || 50
-  const offset = parseInt(query.offset as string) || 0
+  const page = parseInt(query.page as string) || 1
+  const offset = (page - 1) * limit
+  
   const comCode = query.comCode as string
   const q = query.q as string
-  console.log("call api employee", { limit, offset, comCode, q })
   let sql = `SELECT comCode, empCode, name, beginDate, endDate, timeCode
              FROM employee`
   const params: any[] = []

@@ -33,7 +33,7 @@ const refreshTrigger = useState<number>('employeeRefreshTrigger', () => 0)
 async function handleUpdate() {
   isUpdating.value = true
   try {
-    await $fetch('/api/employee', {
+    await $fetch('/api/employeeedit', {
       method: 'PUT',
       body: employee.value
     })
@@ -43,7 +43,6 @@ async function handleUpdate() {
       color: 'success'
     })
     isEditing.value = false
-    // Trigger table refresh
     refreshTrigger.value++
   } catch (error: any) {
     console.error('Failed to update employee details:', error)
@@ -66,16 +65,14 @@ async function fetchEmployee() {
   
   loading.value = true
   try {
-    const res = await $fetch<{ rows: any[] }>('/api/employee', {
+    const res = await $fetch<{ employee: any }>('/api/employeeedit', {
       query: {
-        q: effectiveEmpCode.value,
-        comCode: effectiveComCode.value,
-        limit: 1
+        empCode: effectiveEmpCode.value,
+        comCode: effectiveComCode.value
       }
     })
-    const emp = res.rows[0] || null
+    const emp = res.employee || null
     if (emp) {
-      // แปลงวันที่ให้เป็นรูปแบบ YYYY-MM-DD เพื่อให้ช่อง Input type="date" ทำงานได้ถูกต้อง
       if (emp.beginDate) emp.beginDate = formatDate(emp.beginDate)
       if (emp.endDate) emp.endDate = formatDate(emp.endDate)
     }

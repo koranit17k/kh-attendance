@@ -1,18 +1,18 @@
 ::u-page-hero{title="ระบบตรวจสอบเวลาการทำงาน" }
 
-::attend-sum
+::AttendanceSum
 ::
 
 ::u-page-section
 :::div{class="grid grid-cols-2 gap-2 w-full"}
-  ::attendance-chart
+  ::AttendanceChart
   ::
-  ::company-pie-chart
+  ::CompanyPieChart
   ::
 :::
 ::
 
-::calendar{full}
+::Calendar{full}
 ::
 
 ::div{class="flex justify-center"}

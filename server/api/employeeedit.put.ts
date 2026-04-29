@@ -1,7 +1,16 @@
 import { pool } from '../utils/db'
 
+function formatDBDate(dateVal: any): string | null {
+  if (!dateVal || dateVal === '') return null
+  const d = new Date(dateVal)
+  if (isNaN(d.getTime())) return null
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
 export default defineEventHandler(async (event) => {
-  console.time('update-employee')
   const body = await readBody(event)
   const { comCode, empCode, name, beginDate, endDate, timeCode } = body
 
@@ -13,24 +22,6 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    // ฟังก์ชันช่วยจัดการรูปแบบวันที่ให้เป็น YYYY-MM-DD
-    const formatDBDate = (dateVal: any) => {
-      if (!dateVal || dateVal === '') return null
-      try {
-        const d = new Date(dateVal)
-        if (isNaN(d.getTime())) return null
-        // ใช้ Local Time เพื่อหลีกเลี่ยงปัญหาเรื่อง Timezone เลื่อนวัน
-        const year = d.getFullYear()
-        const month = String(d.getMonth() + 1).padStart(2, '0')
-        const day = String(d.getDate()).padStart(2, '0')
-        return `${year}-${month}-${day}`
-      } catch (e) {
-        return null
-      }
-    }
-
-    console.log('Updating employee:', { comCode, empCode, name, beginDate, endDate, timeCode })
-    
     const [result] = await pool.execute(
       'UPDATE employee SET name = ?, beginDate = ?, endDate = ?, timeCode = ? WHERE comCode = ? AND empCode = ?',
       [
@@ -42,7 +33,6 @@ export default defineEventHandler(async (event) => {
         empCode
       ]
     )
-    console.timeEnd('update-employee')
     return { success: true, result }
   } catch (error: any) {
     console.error('Update Error:', error)
