@@ -44,7 +44,7 @@ const resetAndRefresh = async () => {
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold">Attendance Summary</h1>
       <UButton
-        label="reset"
+        label="clear"
         icon="i-lucide-refresh-cw"
         variant="outline"
         @click="resetAndRefresh"
