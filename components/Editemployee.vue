@@ -110,16 +110,11 @@ watch(() => [effectiveEmpCode.value, effectiveComCode.value], () => {
     </div>
 
     <template v-else-if="employee">
-      <UCard class="overflow-hidden shadow-lg ring-1 ring-gray-200 dark:ring-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl">
-        <template #header>
-          <div class="flex justify-end">
-            <UButton class="w-24 justify-center" color="primary" variant="soft" @click="isEditing ? cancelEdit() : startEdit()">
-              {{ isEditing ? 'ยกเลิก' : 'แก้ไข' }}
-            </UButton>
-          </div>
-        </template>
-
-        <div class="flex flex-row items-center justify-between gap-4 py-2 overflow-x-auto">
+      <UCard 
+        class="overflow-hidden shadow-lg ring-1 ring-gray-200 dark:ring-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl"
+        :ui="{ body: 'px-4 py-4 sm:p-4', footer: 'px-4 py-3 sm:px-4' }"
+      >
+        <div class="flex flex-row items-center justify-between gap-4 overflow-x-auto">
           <div class="flex-1 min-w-[80px]">
             <p class="text-xs font-semibold text-gray-500 uppercase">ComCode</p>
             <p class="text-sm font-medium text-gray-800 dark:text-gray-200 whitespace-nowrap">{{ employee.comCode }}</p>
@@ -156,13 +151,20 @@ watch(() => [effectiveEmpCode.value, effectiveComCode.value], () => {
         </div>
 
         <template #footer>
-          <div class="flex justify-end gap-3">
-            <UButton class="w-24 justify-center" variant="ghost" color="neutral" to="/attendance/employee" v-if="!props.empCode && !sharedEmpCode">
-              กลับ
-            </UButton>
-            <UButton class="w-24 justify-center" color="primary" @click="handleUpdate" :loading="isUpdating">
-              Update
-            </UButton>
+          <div class="flex justify-between items-center w-full">
+            <div>
+              <UButton class="w-24 justify-center" color="primary" variant="soft" @click="isEditing ? cancelEdit() : startEdit()">
+                {{ isEditing ? 'ยกเลิก' : 'แก้ไข' }}
+              </UButton>
+            </div>
+            <div class="flex gap-3">
+              <UButton class="w-24 justify-center" variant="ghost" color="neutral" to="/attendance/employee" v-if="!props.empCode && !sharedEmpCode">
+                กลับ
+              </UButton>
+              <UButton class="w-24 justify-center" color="primary" @click="handleUpdate" :loading="isUpdating">
+                Update
+              </UButton>
+            </div>
           </div>
         </template>
       </UCard>

@@ -21,7 +21,7 @@ type Company = {
 }
 
 const page = ref(1)
-const pageCount = 50
+const pageCount = 15
 const selectedCompany = ref<string>('')
 const globalFilter = ref('')
 const debouncedQ = ref('')
@@ -122,7 +122,7 @@ function formatDate(val: unknown): string {
 </script>
 
 <template>
-  <div class="flex flex-col h-[calc(100vh-200px)] w-full bg-background border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm">
+  <div class="flex flex-col w-full bg-background border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm">
     <div class="flex px-4 py-3.5 border-b border-gray-200 dark:border-gray-800 shrink-0 gap-4 items-center bg-gray-50/50 dark:bg-gray-900/50 rounded-t-lg">
       <USelectMenu 
         v-model="selectedCompany" 
@@ -153,7 +153,7 @@ function formatDate(val: unknown): string {
     </div>
 
     <ClientOnly>
-      <div ref="tableWrapper" class="flex-1 overflow-auto bg-white dark:bg-gray-900">
+      <div ref="tableWrapper" class="flex-1 overflow-x-auto bg-white dark:bg-gray-900">
       <UTable 
         :data="data" 
         :columns="columns" 
