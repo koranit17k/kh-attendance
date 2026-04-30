@@ -36,9 +36,18 @@ const refreshTrigger = useState<number>('attendanceRefreshTrigger', () => 0)
 async function handleUpdate() {
   isUpdating.value = true
   try {
+    const updateData = {
+      ...attendance.value,
+      reason: '  1',
+      modified_by: 'admin',
+      modified_at: new Date(),
+      approved_by: 'admin',
+      approved_at: new Date()
+    }
+    
     await $fetch('/api/attendanceedit', {
       method: 'PUT',
-      body: attendance.value
+      body: updateData
     })
     toast.add({
       title: 'สำเร็จ',
