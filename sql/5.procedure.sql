@@ -52,6 +52,8 @@ DELIMITER ;
 
 
 
+DROP PROCEDURE IF EXISTS payroll.runAttendance;
+
 DELIMITER $$
 $$
 CREATE DEFINER=`koranit`@`%` PROCEDURE `payroll`.`runAttendance`(
@@ -69,11 +71,10 @@ BEGIN
     t.missing_lunch_minutes = v.mlunch,
     t.work_minutes = v.workMin,
     t.ot_total_minutes = v.otMin,
-    t.modified_at = NOW(),
-    t.modified_by = 'system'
-WHERE t.status_check <> 'APPROVED'
+    t.status_check = '2',
+    t.modified_at = NOW()
+WHERE t.status_check = '1'
     AND t.dateAt >= p_start;
-    
 END$$
 DELIMITER ;
 

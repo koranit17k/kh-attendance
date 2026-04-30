@@ -14,7 +14,7 @@ function formatDateTime(dateVal: any): string | null {
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
-  const { comCode, empCode, dateAt, morning, lunch_out, lunch_in, evening, night, reason, modified_by, modified_at, approved_by, approved_at } = body
+  const { comCode, empCode, dateAt, morning, lunch_out, lunch_in, evening, night, reason,status_check, modified_by, modified_at, approved_by, approved_at } = body
 
   if (!comCode || !empCode || !dateAt) {
     throw createError({
@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const [result] = await pool.execute(
-      'UPDATE attendance SET morning = ?, lunch_out = ?, lunch_in = ?, evening = ?, night = ?, reason = ?, modified_by = ?, modified_at = ?, approved_by = ?, approved_at = ? WHERE comCode = ? AND empCode = ? AND dateAt = ?',
+      'UPDATE attendance SET morning = ?, lunch_out = ?, lunch_in = ?, evening = ?, night = ?, reason = ?,status_check = ?, modified_by = ?, modified_at = ?, approved_by = ?, approved_at = ? WHERE comCode = ? AND empCode = ? AND dateAt = ?',
       [
         formatDBTime(morning),
         formatDBTime(lunch_out),
@@ -33,6 +33,7 @@ export default defineEventHandler(async (event) => {
         formatDBTime(evening),
         formatDBTime(night),
         reason || '1',
+        status_check || '1',
         modified_by || 'admin',
         formatDateTime(modified_at) || formatDateTime(new Date()),
         approved_by || 'admin',

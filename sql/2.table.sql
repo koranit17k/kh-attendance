@@ -152,38 +152,38 @@ create table `users` (
 ) ENGINE = InnoDB default CHARSET = utf8mb4 collate = utf8mb4_general_ci COMMENT = 'ผู้ใช้งานระบบ';
 
 -- payroll.attendance definition
-create table `attendance` (
-    `comCode` varchar(2) not null,
-    `empCode` smallint(5) unsigned not null,
-    `scanCode` varchar(5) default null COMMENT 'รหัสสแกนลายนิ้วมือ',
-    `dateAt` varchar(10) not null COMMENT 'วันเดือนปีทำงาน',
-    `status` varchar(20) default null COMMENT 'สถานะ',
-    `day_case` varchar(13) default null COMMENT 'ดูวัน',
-    `lunch_case` varchar(16) default null COMMENT 'ดูพักเที่ยง',
-    `night_case` varchar(13) default null COMMENT 'ดูค่ำ',
-    `early` varchar(10) default null COMMENT 'เวลาออก ข้ามวัน 00:00 - 06:00 (last)',
-    `morning` varchar(10) default null COMMENT 'เวลาเข้า เช้า 06:00 - 10:00 (last)',
-    `lunch_out` varchar(10) default null COMMENT 'เวลาพักเที่ยง 11:00 - 13:30 (first)',
-    `lunch_in` varchar(10) default null COMMENT 'เวลากลับเที่ยง 11:30 - 14:00 (last)',
-    `evening` varchar(10) default null COMMENT 'เวลาออก เย็น 16:00 - 18:00 (last)',
-    `night` varchar(10) default null COMMENT 'เวลาออก ค่ำ 19:00 - 24:00 (last)',
-    `lunch_minutes` smallint default null COMMENT 'จำนวนนาทีพักกลางวัน',
-    `late_morning_minutes` smallint default null COMMENT 'จำนวนนาทีมาสาย เช้า',
-    `late_lunch_minutes` smallint default null COMMENT 'จำนวนนาทีมาสาย บ่าย/เที่ยง/ออกก่อนเวลางาน',
-    `work_minutes` smallint default null COMMENT 'จำนวนนาทีทำงาน',
-    `ot_total_minutes` smallint default null COMMENT 'จำนวนนาทีล่วงเวลา',
-    `missing_lunch_minutes` smallint default null COMMENT 'จำนวนนาทีหักกรณีลืมสแกนพักเที่ยง',
-    `count` tinyint COMMENT 'จำนวนครั้งที่สแกน',
-    `rawTime` varchar(60) default null COMMENT 'เวลาที่สแกน',
-    `reason` VARCHAR(255),
-    `status_check` ENUM('DRAFT', 'SUBMITTED', 'APPROVED', 'REJECTED') default 'DRAFT',
-    `modified_by` VARCHAR(50) null,
-    `modified_at` DATETIME default current_timestamp,
-    `approved_by` VARCHAR(50) null,
-    `approved_at` DATETIME null,
-    primary key (`comCode`, `empCode`, `dateAt`),
-    constraint `attendance_ibfk_1` foreign key (`comCode`, `empCode`) references `employee` (`comCode`, `empCode`)
-) ENGINE = InnoDB default CHARSET = utf8mb4 collate = utf8mb4_general_ci COMMENT = 'วันที่มาทำงาน เวลาเข้าออกงาน ตามการสแกน';
+
+CREATE TABLE `attendance` (
+  `comCode` varchar(2) NOT NULL,
+  `empCode` smallint(5) unsigned NOT NULL,
+  `dateAt` varchar(10) NOT NULL COMMENT 'วันเดือนปีทำงาน',
+  `status` varchar(20) DEFAULT NULL COMMENT 'สถานะ',
+  `day_case` varchar(13) DEFAULT NULL COMMENT 'ดูวัน',
+  `lunch_case` varchar(16) DEFAULT NULL COMMENT 'ดูพักเที่ยง',
+  `night_case` varchar(13) DEFAULT NULL COMMENT 'ดูค่ำ',
+  `early` varchar(10) DEFAULT NULL COMMENT 'เวลาออก ข้ามวัน 00:00 - 06:00 (last)',
+  `morning` varchar(10) DEFAULT NULL COMMENT 'เวลาเข้า เช้า 06:00 - 10:00 (last)',
+  `lunch_out` varchar(10) DEFAULT NULL COMMENT 'เวลาพักเที่ยง 11:00 - 13:30 (first)',
+  `lunch_in` varchar(10) DEFAULT NULL COMMENT 'เวลากลับเที่ยง 11:30 - 14:00 (last)',
+  `evening` varchar(10) DEFAULT NULL COMMENT 'เวลาออก เย็น 16:00 - 18:00 (last)',
+  `night` varchar(10) DEFAULT NULL COMMENT 'เวลาออก ค่ำ 19:00 - 24:00 (last)',
+  `lunch_minutes` smallint(6) DEFAULT NULL COMMENT 'จำนวนนาทีพักกลางวัน',
+  `late_morning_minutes` smallint(6) DEFAULT NULL COMMENT 'จำนวนนาทีมาสาย เช้า',
+  `late_lunch_minutes` smallint(6) DEFAULT NULL COMMENT 'จำนวนนาทีมาสาย บ่าย/เที่ยง/ออกก่อนเวลางาน',
+  `work_minutes` smallint(6) DEFAULT NULL COMMENT 'จำนวนนาทีทำงาน',
+  `ot_total_minutes` smallint(6) DEFAULT NULL COMMENT 'จำนวนนาทีล่วงเวลา',
+  `missing_lunch_minutes` smallint(6) DEFAULT NULL COMMENT 'จำนวนนาทีหักกรณีลืมสแกนพักเที่ยง',
+  `count` tinyint(4) DEFAULT NULL COMMENT 'จำนวนครั้งที่สแกน',
+  `rawTime` varchar(60) DEFAULT NULL COMMENT 'เวลาที่สแกน',
+  `reason` varchar(255) DEFAULT NULL COMMENT '1 = แก้ไขข้อมูล',
+  `status_check` tinyint(3) unsigned DEFAULT 1 COMMENT '0=cancel, 1=draft, 2=calculated, 3 approved',
+  `modified_by` varchar(50) DEFAULT NULL,
+  `modified_at` datetime DEFAULT current_timestamp(),
+  `approved_by` varchar(50) DEFAULT NULL,
+  `approved_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`comCode`,`empCode`,`dateAt`),
+  CONSTRAINT `attendance_ibfk_1` FOREIGN KEY (`comCode`, `empCode`) REFERENCES `employee` (`comCode`, `empCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='วันที่มาทำงาน เวลาเข้าออกงาน ตามการสแกน';
 
 -- payroll.permission definition
 create table `permission` (

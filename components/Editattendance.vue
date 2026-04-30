@@ -49,6 +49,20 @@ async function handleUpdate() {
       method: 'PUT',
       body: updateData
     })
+    
+    // เรียก procedure หลังจากอัปเดตสำเร็จ
+    try {
+      await $fetch('/api/attprocedure', {
+        method: 'PUT',
+        body: {
+          date: attendance.value.dateAt
+        }
+      })
+    } catch (procedureError: any) {
+      console.warn('Procedure call failed:', procedureError)
+      // ไม่ต้องแสดง error ถ้า procedure ล้มเหลว เพราะ update สำเร็จแล้ว
+    }
+    
     toast.add({
       title: 'สำเร็จ',
       description: 'อัปเดตข้อมูลการเข้า-ออกงานเรียบร้อยแล้ว',
