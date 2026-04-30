@@ -74,6 +74,25 @@ function handleRefresh() {
   else page.value = 1
 }
 
+const sharedEmpCode = useState<number | null>('selectedEmpCode', () => null)
+const sharedComCode = useState<string | null>('selectedComCode', () => null)
+const sharedDateAt = useState<string | null>('selectedDateAt', () => null)
+const refreshTrigger = useState<number>('attendanceRefreshTrigger', () => 0)
+
+function onRowClick(event: any, row: any) {
+  const empCode = row?.original?.empCode || row?.empCode
+  const comCode = row?.original?.comCode || row?.comCode
+  const dateAt = row?.original?.dateAt || row?.dateAt
+  
+  if (empCode && comCode && dateAt) {
+    sharedEmpCode.value = Number(empCode)
+    sharedComCode.value = comCode
+    sharedDateAt.value = dateAt
+  }
+}
+
+watch(refreshTrigger, () => refresh())
+
 const columns: TableColumn<Attendance>[] = [
   {
     id: 'no',
@@ -111,7 +130,7 @@ function formatTime(val: unknown): string {
 </script>
 
 <template>
-  <div class="flex flex-col h-[calc(100vh-200px)] w-full bg-background border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm">
+  <div class="flex flex-col w-full bg-background border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm">
     <div class="flex px-4 py-3.5 border-b border-gray-200 dark:border-gray-800 shrink-0 gap-4 items-center bg-gray-50/50 dark:bg-gray-900/50 rounded-t-lg">
       <USelectMenu 
         v-model="selectedCompany" 
@@ -119,15 +138,15 @@ function formatTime(val: unknown): string {
         value-key="comCode" 
         label-key="displayName" 
         placeholder="All Companies"
-        class="w-64"
+        class="w-72"
         clear
         icon="i-lucide-building-2"
       />
 
       <UInput 
         v-model="filterEmpCode" 
-        class="w-48" 
-        placeholder="EmpCode..." 
+        class="flex-1" 
+        placeholder="Search EmpCode..." 
         icon="i-lucide-search"
       />
 
@@ -137,8 +156,6 @@ function formatTime(val: unknown): string {
         class="w-48" 
         icon="i-lucide-calendar"
       />
-
-      <div class="flex-1"></div>
 
       <UButton 
         icon="i-lucide-rotate-cw" 
@@ -151,16 +168,17 @@ function formatTime(val: unknown): string {
     </div>
 
     <ClientOnly>
-      <div ref="tableWrapper" class="flex-1 overflow-auto bg-white dark:bg-gray-900">
+      <div ref="tableWrapper" class="flex-1 overflow-x-auto bg-white dark:bg-gray-900">
       <UTable 
         :data="data" 
         :columns="columns" 
         :loading="loading"
         :ui="{ 
-          tr: 'hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors',
+          tr: 'hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer',
           td: 'py-2',
           th: 'py-3'
         }"
+        @select="onRowClick"
       >
         <template #empty-state>
           <div class="flex flex-col items-center justify-center p-8">
