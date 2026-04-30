@@ -104,7 +104,7 @@ watch(() => [effectiveEmpCode.value, effectiveComCode.value], () => {
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto p-4 w-full">
+  <div class="w-full p-1">
     <div v-if="loading" class="flex flex-col items-center justify-center p-8">
       <p class="text-gray-500 text-sm">กำลังดึงข้อมูล...</p>
     </div>
@@ -174,4 +174,5 @@ watch(() => [effectiveEmpCode.value, effectiveComCode.value], () => {
       <h3 class="text-sm font-bold text-gray-900 dark:text-white">ไม่พบข้อมูลพนักงาน</h3>
     </div>
   </div>
+  <br>
 </template>
