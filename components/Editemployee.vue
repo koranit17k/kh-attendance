@@ -116,35 +116,35 @@ watch(() => [effectiveEmpCode.value, effectiveComCode.value], () => {
       >
         <div class="flex flex-row items-center justify-between gap-4 overflow-x-auto">
           <div class="flex-1 min-w-[80px]">
-            <p class="text-xs font-semibold text-gray-500 uppercase">ComCode</p>
+            <p class="text-xs font-semibold text-gray-500 uppercase">บริษัท</p>
             <p class="text-sm font-medium text-gray-800 dark:text-gray-200 whitespace-nowrap">{{ employee.comCode }}</p>
           </div>
 
           <div class="flex-1 min-w-[80px]">
-            <p class="text-xs font-semibold text-gray-500 uppercase">EmpCode</p>
+            <p class="text-xs font-semibold text-gray-500 uppercase">รหัสพนักงาน</p>
             <p class="text-sm font-medium text-gray-800 dark:text-gray-200 font-mono whitespace-nowrap">{{ employee.empCode }}</p>
           </div>
 
           <div class="flex-1 min-w-[120px]">
-            <p class="text-xs font-semibold text-gray-500 uppercase">Name</p>
+            <p class="text-xs font-semibold text-gray-500 uppercase">ชื่อ-นามสกุล</p>
             <p v-if="!isEditing" class="text-sm font-medium text-gray-900 dark:text-white whitespace-nowrap">{{ employee.name }}</p>
             <UInput v-else v-model="employee.name" size="sm" class="w-full" />
           </div>
 
           <div class="hidden md:block flex-1 min-w-[120px]">
-            <p class="text-xs font-semibold text-gray-500 uppercase">BeginDate</p>
+            <p class="text-xs font-semibold text-gray-500 uppercase">วันที่เริ่มงาน</p>
             <p v-if="!isEditing" class="text-sm font-medium text-gray-800 dark:text-gray-200 whitespace-nowrap">{{ formatDate(employee.beginDate) }}</p>
             <UInput v-else type="date" v-model="employee.beginDate" size="sm" class="w-full" />
           </div>
 
           <div class="hidden md:block flex-1 min-w-[120px]">
-            <p class="text-xs font-semibold text-gray-500 uppercase">EndDate</p>
+            <p class="text-xs font-semibold text-gray-500 uppercase">วันที่สิ้นสุด</p>
             <p v-if="!isEditing" class="text-sm font-medium text-gray-800 dark:text-gray-200 whitespace-nowrap">{{ formatDate(employee.endDate) }}</p>
             <UInput v-else type="date" v-model="employee.endDate" size="sm" class="w-full" />
           </div>
 
           <div class="hidden md:block flex-1 min-w-[80px]">
-            <p class="text-xs font-semibold text-gray-500 uppercase">TimeCode</p>
+            <p class="text-xs font-semibold text-gray-500 uppercase">timecode</p>
             <p v-if="!isEditing" class="text-sm font-medium text-gray-800 dark:text-gray-200 whitespace-nowrap">{{ employee.timeCode || 'ยังไม่ได้ระบุ' }}</p>
             <UInput v-else v-model="employee.timeCode" size="sm" class="w-full" />
           </div>

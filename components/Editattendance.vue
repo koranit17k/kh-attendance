@@ -169,17 +169,17 @@ watch(() => [effectiveEmpCode.value, effectiveComCode.value, effectiveDateAt.val
         <div class="space-y-4">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <p class="text-xs font-semibold text-gray-500 uppercase mb-1">ComCode</p>
+              <p class="text-s font-semibold text-gray-500 uppercase mb-1">บริษัท</p>
               <p class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ attendance.comCode }}</p>
             </div>
 
             <div>
-              <p class="text-xs font-semibold text-gray-500 uppercase mb-1">EmpCode</p>
+              <p class="text-s font-semibold text-gray-500 uppercase mb-1">รหัสพนักงาน</p>
               <p class="text-sm font-medium text-gray-800 dark:text-gray-200 font-mono">{{ attendance.empCode }}</p>
             </div>
 
             <div>
-              <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Date</p>
+              <p class="text-s font-semibold text-gray-500 uppercase mb-1">วันที่</p>
               <p v-if="!isEditing" class="text-sm font-medium text-gray-900 dark:text-white">{{ formatDate(attendance.dateAt) }}</p>
               <UInput v-else type="date" v-model="attendance.dateAt" size="sm" class="w-full" />
             </div>
@@ -187,31 +187,31 @@ watch(() => [effectiveEmpCode.value, effectiveComCode.value, effectiveDateAt.val
 
           <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
             <div>
-              <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Morning</p>
+              <p class="text-s font-semibold text-gray-500 uppercase mb-1">เข้างาน</p>
               <p v-if="!isEditing" class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ attendance.morning || '-' }}</p>
               <UInput v-else :value="attendance.morning" @input="handleTimeInput($event, 'morning')" size="sm" class="w-full" placeholder="08:00" />
             </div>
 
             <div>
-              <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Lunch Out</p>
+              <p class="text-s font-semibold text-gray-500 uppercase mb-1">ออกพัก</p>
               <p v-if="!isEditing" class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ attendance.lunch_out || '-' }}</p>
               <UInput v-else :value="attendance.lunch_out" @input="handleTimeInput($event, 'lunch_out')" size="sm" class="w-full" placeholder="12:00" />
             </div>
 
             <div>
-              <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Lunch In</p>
+              <p class="text-s font-semibold text-gray-500 uppercase mb-1">เข้าพัก</p>
               <p v-if="!isEditing" class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ attendance.lunch_in || '-' }}</p>
               <UInput v-else :value="attendance.lunch_in" @input="handleTimeInput($event, 'lunch_in')" size="sm" class="w-full" placeholder="13:00" />
             </div>
 
             <div>
-              <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Evening</p>
+              <p class="text-s font-semibold text-gray-500 uppercase mb-1">เลิกงาน</p>
               <p v-if="!isEditing" class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ attendance.evening || '-' }}</p>
               <UInput v-else :value="attendance.evening" @input="handleTimeInput($event, 'evening')" size="sm" class="w-full" placeholder="17:00" />
             </div>
 
             <div>
-              <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Night</p>
+              <p class="text-s font-semibold text-gray-500 uppercase mb-1">ออก OT</p>
               <p v-if="!isEditing" class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ attendance.night || '-' }}</p>
               <UInput v-else :value="attendance.night" @input="handleTimeInput($event, 'night')" size="sm" class="w-full" placeholder="22:00" />
             </div>

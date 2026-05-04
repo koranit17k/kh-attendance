@@ -84,25 +84,25 @@ watch(refreshTrigger, () => refresh())
 const columns: TableColumn<Employee>[] = [
   {
     id: 'no',
-    header: 'No.',
+    header: 'ลำดับ',
     cell: ({ row }) => (page.value - 1) * pageCount + row.index + 1
   },
-  { accessorKey: 'comCode', header: 'ComCode' },
-  { accessorKey: 'empCode', header: 'EmpCode', cell: ({ row }) => `${row.getValue('empCode')}` },
-  { accessorKey: 'name', header: 'Name' },
+  { accessorKey: 'comCode', header: 'บริษัท' },
+  { accessorKey: 'empCode', header: 'รหัสพนักงาน', cell: ({ row }) => `${row.getValue('empCode')}` },
+  { accessorKey: 'name', header: 'ชื่อ-นามสกุล' },
   {
     accessorKey: 'beginDate',
-    header: 'BeginDate',
+    header: 'วันที่เริ่มงาน',
     cell: ({ row }) => formatDate(row.getValue('beginDate'))
   },
   {
     accessorKey: 'endDate',
-    header: 'EndDate',
+    header: 'วันที่สิ้นสุด',
     cell: ({ row }) => formatDate(row.getValue('endDate'))
   },
   {
     accessorKey: 'timeCode',
-    header: 'TimeCode',
+    header: 'timecode',
     cell: ({ row }) => {
       const val = row.getValue('timeCode')
       return val ? h(UBadge, { variant: 'subtle', color: 'neutral' }, () => val) : '-'

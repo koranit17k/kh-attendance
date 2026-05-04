@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import * as echarts from 'echarts'
-import { onMounted, onUnmounted, ref, watch, computed } from 'vue'
+import { onMounted, onUnmounted, ref, watch, computed, nextTick } from 'vue'
 
 const chartRef = ref<HTMLElement | null>(null)
 let chart: echarts.ECharts | null = null
@@ -32,7 +32,7 @@ const initChart = () => {
 }
 
 const updateChart = () => {
-  if (!chart || !data.value) return
+  if (!chart || !data.value || data.value.length === 0) return
 
   // Using Daily Labels (dateAt)
   const dates = data.value.map(item => item.dateAt)
@@ -151,8 +151,9 @@ onUnmounted(() => {
 })
 
 // Watch for data changes
-watch(data, (newVal) => {
-  if (newVal) {
+watch(data, async (newVal) => {
+  if (newVal && newVal.length > 0) {
+    await nextTick()
     if (!chart) initChart()
     updateChart()
   }
@@ -177,6 +178,6 @@ watch(() => colorMode.value, () => {
     <div v-else-if="!data || data.length === 0" class="flex items-center justify-center h-full">
       <p class="text-gray-500">ไม่พบข้อมูลสำหรับช่วงวันที่เลือก</p>
     </div>
-    <div ref="chartRef" class="w-full h-full" :class="{ 'opacity-50 grayscale pointer-events-none': pending }"></div>
+    <div v-else ref="chartRef" class="w-full h-full" :class="{ 'opacity-50 grayscale pointer-events-none': pending }"></div>
   </div>
 </template>

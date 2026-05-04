@@ -96,21 +96,21 @@ watch(refreshTrigger, () => refresh())
 const columns: TableColumn<Attendance>[] = [
   {
     id: 'no',
-    header: 'No.',
+    header: 'ลำดับ',
     cell: ({ row }) => (page.value - 1) * pageCount + row.index + 1
   },
   {
     accessorKey: 'dateAt',
-    header: 'Date',
+    header: 'วันที่',
     cell: ({ row }) => formatDate(row.getValue('dateAt'))
   },
-  { accessorKey: 'comCode', header: 'ComCode' },
-  { accessorKey: 'empCode', header: 'EmpCode', cell: ({ row }) => `${row.getValue('empCode')}` },
-  { accessorKey: 'morning', header: 'Morning', cell: ({ row }) => formatTime(row.getValue('morning')) },
-  { accessorKey: 'lunch_out', header: 'Lunch Out', cell: ({ row }) => formatTime(row.getValue('lunch_out')) },
-  { accessorKey: 'lunch_in', header: 'Lunch In', cell: ({ row }) => formatTime(row.getValue('lunch_in')) },
-  { accessorKey: 'evening', header: 'Evening', cell: ({ row }) => formatTime(row.getValue('evening')) },
-  { accessorKey: 'night', header: 'Night', cell: ({ row }) => formatTime(row.getValue('night')) }
+  { accessorKey: 'comCode', header: 'บริษัท' },
+  { accessorKey: 'empCode', header: 'รหัสพนักงาน', cell: ({ row }) => `${row.getValue('empCode')}` },
+  { accessorKey: 'morning', header: 'เข้างาน', cell: ({ row }) => formatTime(row.getValue('morning')) },
+  { accessorKey: 'lunch_out', header: 'ออกพัก', cell: ({ row }) => formatTime(row.getValue('lunch_out')) },
+  { accessorKey: 'lunch_in', header: 'เข้าพัก', cell: ({ row }) => formatTime(row.getValue('lunch_in')) },
+  { accessorKey: 'evening', header: 'เลิกงาน', cell: ({ row }) => formatTime(row.getValue('evening')) },
+  { accessorKey: 'night', header: 'ออก OT', cell: ({ row }) => formatTime(row.getValue('night')) }
 ]
 
 function formatDate(val: unknown): string {
