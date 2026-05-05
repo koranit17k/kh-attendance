@@ -206,12 +206,12 @@ describe("Attendance System Verification (Year 3000)", () => {
     const cleanup = async () => {
         const [year, month] = TEST_MONTH.split("-")
         await connection.execute(
-            `DELETE FROM timecard WHERE scanCode = ? AND YEAR(scanAt) = ? AND MONTH(scanAt) = ?`,
-            [EMP_CODE, year, month],
+            `DELETE FROM timecard WHERE YEAR(scanAt) = ? AND MONTH(scanAt) = ?`,
+            [year, month],
         )
         await connection.execute(
-            `DELETE a FROM attendance a JOIN employee e ON a.comCode = e.comCode AND a.empCode = e.empCode WHERE e.scanCode = ? AND YEAR(a.dateAt) = ? AND MONTH(a.dateAt) = ?`,
-            [EMP_CODE, year, month],
+            `DELETE a FROM attendance a WHERE YEAR(a.dateAt) = ? AND MONTH(a.dateAt) = ?`,
+            [year, month],
         )
     }
 
@@ -240,7 +240,6 @@ describe("Attendance System Verification (Year 3000)", () => {
         if (allScans.length > 0) {
             await connection.query(`INSERT INTO timecard (scanCode, scanAt) VALUES ?`, [allScans])
         }
-
         // 3. Run Procedures
         await connection.query(`CALL runTimeCard('${TEST_MONTH}-01')`)
         await connection.query(`CALL runAttendance('${TEST_MONTH}-01')`)
