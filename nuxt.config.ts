@@ -6,5 +6,11 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   llms: {
     domain: 'http://localhost:3000'
+  },
+  nitro: {
+    prerender: {
+      crawlLinks: false,
+      ignore: ['/api/**']
+    }
   }
 })

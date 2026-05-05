@@ -1,3 +1,4 @@
+ssh -i /home/koranit/Downloads/instance2/ssh-key-2026-05-04.key ubuntu@161.118.204.74
 sudo mkdir -p /home/ubuntu/kxreport/report/payroll
 cp *.jrxml /home/ubuntu/kxreport/report/payroll
 
