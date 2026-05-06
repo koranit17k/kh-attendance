@@ -14,6 +14,14 @@ export function getPool(): mysql.Pool {
   return _pool
 }
 
+export async function closePool() {
+  if (_pool) {
+    await _pool.end()
+    _pool = null
+    console.log('Database pool closed.')
+  }
+}
+
 /** @deprecated use getPool() instead */
 export const pool = new Proxy({} as mysql.Pool, {
   get(_target, prop) {

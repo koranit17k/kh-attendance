@@ -8,20 +8,9 @@ REMOTE_DIR="/var/www/kh-attendance"
 APP_NAME="kh-attendance"
 PORT="3000"
 
-##อันนี้บัคต้อง pnpm build manual
-# echo "Build local..."
-# # timeout 300s: ถ้า build เสร็จแล้วค้าง จะ kill อัตโนมัติ (exit 124 = timeout = OK)
-# # ถ้า build fail จริงๆ จะ exit ด้วย code อื่นและหยุด script
-# timeout 60 pnpm build
-# BUILD_EXIT=$?
-# if [ $BUILD_EXIT -eq 124 ]; then
-#   echo "Build completed (process killed after timeout — normal)"
-# elif [ $BUILD_EXIT -ne 0 ]; then
-#   echo "Build FAILED with exit code $BUILD_EXIT"
-#   exit $BUILD_EXIT
-# else
-#   echo "Build completed cleanly (exit code: 0)"
-# fi
+echo "Build local..."
+pnpm build
+echo "Build completed cleanly"
 
 echo "Prepare remote directory..."
 chmod 600 "$KEY"
@@ -33,11 +22,11 @@ rsync -avz --delete \
   .output/ \
   $USER@$HOST:$REMOTE_DIR/.output/
 
-echo "Upload package.json for dependencies..."
-rsync -avz \
-  -e "ssh -i $KEY" \
-  package.json \
-  $USER@$HOST:$REMOTE_DIR/
+# echo "Upload package.json for dependencies..."
+# rsync -avz \
+#   -e "ssh -i $KEY" \
+#   package.json \
+#   $USER@$HOST:$REMOTE_DIR/
 
 echo "Restart PM2..."
 ssh -i "$KEY" $USER@$HOST "bash -lc '
@@ -80,27 +69,18 @@ ssh -i "$KEY" $USER@$HOST "
   sudo nginx -t && sudo systemctl restart nginx
 "
 
-echo "Deploy Jasper Reports..."
-ssh -i "$KEY" $USER@$HOST "bash -lc '
-  set -e
+echo "Deploying Jasper Reports directly to Cloud..."
+# Ensure directory exists and is owned by ubuntu for direct sync
+ssh -i "$KEY" $USER@$HOST "sudo mkdir -p /khgroup/report/payroll && sudo chown -R $USER:$USER /khgroup/report/payroll"
 
-  echo \"Preparing report directory...\"
-  sudo mkdir -p /home/ubuntu/kxreport/report/payroll
-  cp ~/kxreport/report/src/*.jrxml /home/ubuntu/kxreport/report/payroll 2>/dev/null || true
+rsync -avz --delete \
+  -e "ssh -i $KEY" \
+  report/*.jasper \
+  $USER@$HOST:/khgroup/report/payroll/
 
-  echo \"Building Jasper reports...\"
-  cd ~/kxreport
-  ./script/build.sh
-
-  echo \"Deploying .jasper files...\"
-  cd ~/kxreport/target/jasper/payroll
-  sudo mkdir -p /khgroup/report/payroll
-  sudo cp *.jasper /khgroup/report/payroll/
+ssh -i "$KEY" $USER@$HOST "
   sudo chmod 644 /khgroup/report/payroll/*.jasper
-  sudo chmod 755 /khgroup/report /khgroup/report/payroll
-
-  echo \"Restarting Tomcat...\"
   sudo systemctl restart tomcat10
-'"
+"
 
 echo "Deploy completed!"
