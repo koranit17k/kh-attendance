@@ -167,7 +167,7 @@ watch(() => [effectiveEmpCode.value, effectiveComCode.value, effectiveDateAt.val
       >
 
         <div class="space-y-4">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="flex flex-wrap gap-x-10 gap-y-4 pb-2">
             <div>
               <p class="text-s font-semibold text-gray-500 uppercase mb-1">บริษัท</p>
               <p class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ attendance.comCode }}</p>
@@ -175,11 +175,11 @@ watch(() => [effectiveEmpCode.value, effectiveComCode.value, effectiveDateAt.val
 
             <div>
               <p class="text-s font-semibold text-gray-500 uppercase mb-1">รหัสพนักงาน</p>
-              <p class="text-sm font-medium text-gray-800 dark:text-gray-200 font-mono">{{ attendance.empCode }}</p>
+              <p class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ attendance.empCode }}</p>
             </div>
 
             <div>
-              <p class="text-s font-semibold text-gray-500 uppercase mb-1">วันที่</p>
+              <p class="text-s font-semibold text-gray-500 uppercase  mb-1">วันที่</p>
               <p v-if="!isEditing" class="text-sm font-medium text-gray-900 dark:text-white">{{ formatDate(attendance.dateAt) }}</p>
               <UInput v-else type="date" v-model="attendance.dateAt" size="sm" class="w-full" />
             </div>

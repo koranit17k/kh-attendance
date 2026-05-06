@@ -17,7 +17,8 @@ const { data, pending, error } = useFetch<any[]>('/api/attendance-daily', {
     endDate: range.value?.end
   })),
   watch: [() => range.value?.start, () => range.value?.end],
-  lazy: true
+  lazy: true,
+  server: false
 })
 
 const initChart = () => {

@@ -6,8 +6,8 @@ const props = defineProps<{
 }>()
 
 const rangeState = useState<{ start: string, end: string }>('attendance-range', () => ({
-  start: today(getLocalTimeZone()).toString(),
-  end: today(getLocalTimeZone()).toString()
+  start: today('Asia/Bangkok').toString(),
+  end: today('Asia/Bangkok').toString()
 }))
 
 const isSelecting = useState('attendance-selecting', () => false)
@@ -51,17 +51,32 @@ const endDateStr = computed({
   }
 })
 
-const { data: counterData } = await useFetch<{ stats: Record<string, 'success' | 'error'> }>('/api/calendar')
+const { data: counterData, refresh: refreshCalendar } = await useFetch<{ stats: Record<string, 'success' | 'error'> }>('/api/calendar', {
+  key: 'calendar-stats-data-' + (props.full ? 'full' : 'mini'),
+  server: false,
+  getCachedData: () => undefined
+})
 
 const dateStats = computed(() => counterData.value?.stats || {})
+
+// Debugging
+if (process.client) {
+  watch(dateStats, (newVal) => {
+    console.log(`[Calendar Debug] Path: ${window.location.pathname}, Data:`, newVal)
+  }, { immediate: true })
+}
 
 function getColorByDate(date: Date) {
   // Use UTC components to match the date object from toDate('UTC')
   const dateStr = `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')}`
 
-  // Get current date string in UTC
-  const now = new Date()
-  const todayStr = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}-${String(now.getUTCDate()).padStart(2, '0')}`
+  // Get current date string in Asia/Bangkok
+  const todayStr = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Bangkok',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).format(new Date())
 
   const isWeekend = date.getDay() == 0
 
@@ -89,7 +104,7 @@ function getColorByDate(date: Date) {
     </div>
 
     <UCalendar v-model="internalRange" :key="calendarResetId"
-      :default-placeholder="today(getLocalTimeZone()).subtract({ months: 1 })" :number-of-months="2" :range="true" :ui="{
+      :default-placeholder="today('Asia/Bangkok').subtract({ months: 1 })" :number-of-months="2" :range="true" :ui="{
         heading: 'text-2xl font-bold text-gray-900 dark:text-white',
         grid: props.full ? 'w-full mx-auto gap-y-1 gap-x-0' : 'w-fit mx-auto gap-y-1 gap-x-0'
       }" :prev-month="{ size: 'xl', variant: 'ghost', color: 'neutral' }"

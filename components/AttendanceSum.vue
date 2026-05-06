@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { today, getLocalTimeZone } from '@internationalized/date'
+import { today } from '@internationalized/date'
 
 interface AttendanceSummary {
   startDate: string
@@ -12,8 +12,8 @@ interface AttendanceSummary {
 }
 
 const range = useState<{ start: string, end: string }>('attendance-range', () => ({
-  start: today(getLocalTimeZone()).toString(),
-  end: today(getLocalTimeZone()).toString()
+  start: today('Asia/Bangkok').toString(),
+  end: today('Asia/Bangkok').toString()
 }))
 const isSelecting = useState('attendance-selecting', () => false)
 const calendarResetId = useState('calendar-reset-id', () => 0)
@@ -26,15 +26,18 @@ const queryParams = computed(() => ({
 const { data, pending, error, refresh } = await useFetch<AttendanceSummary>(
   '/api/attend-sum',
   {
+    key: 'attendance-sum-data',
     query: queryParams,
-    watch: [queryParams]
+    watch: [queryParams],
+    server: false,
+    getCachedData: () => undefined
   }
 )
 
 const resetAndRefresh = async () => {
   isSelecting.value = false
-  range.value.start = today(getLocalTimeZone()).toString()
-  range.value.end = today(getLocalTimeZone()).toString()
+  range.value.start = today('Asia/Bangkok').toString()
+  range.value.end = today('Asia/Bangkok').toString()
   calendarResetId.value++
 }
 </script>
@@ -51,7 +54,7 @@ const resetAndRefresh = async () => {
       />
     </div>
 
-    <div v-if="pending">Loading...</div>
+    <div v-if="pending && !data">Loading...</div>
     <div v-else-if="error">โหลดข้อมูลไม่สำเร็จ</div>
 
     <div v-else class="grid grid-cols-2 md:grid-cols-4 gap-4">
