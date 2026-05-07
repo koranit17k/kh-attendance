@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, onMounted } from 'vue'
 import { today, getLocalTimeZone, parseDate } from '@internationalized/date'
 
 const props = defineProps<{
@@ -6,12 +7,37 @@ const props = defineProps<{
 }>()
 
 const rangeState = useState<{ start: string, end: string }>('attendance-range', () => ({
-  start: today('Asia/Bangkok').toString(),
-  end: today('Asia/Bangkok').toString()
+  start: '',
+  end:''
 }))
 
 const isSelecting = useState('attendance-selecting', () => false)
 const calendarResetId = useState('calendar-reset-id', () => 0)
+
+onMounted(() => {
+  const t = today('Asia/Bangkok').toString()
+  rangeState.value.start = t
+  rangeState.value.end = t
+  // const stats = counterData.value?.stats || {}
+  // // กรองเอาเฉพาะวันที่ในปี 2025
+  // const dates2025 = Object.keys(stats).filter(d => d.startsWith('2025-'))
+
+  // let randomDate: string
+  // if (dates2025.length > 0) {
+  //   // สุ่มจากข้อมูลที่มีในปี 2025
+  //   randomDate = dates2025[Math.floor(Math.random() * dates2025.length)]
+  // } else {
+  //   // ถ้าไม่มีข้อมูลปี 2025 ใน stats เลย ให้สุ่มวันที่ขึ้นมาเอง 1 วันในปี 2025
+  //   const month = Math.floor(Math.random() * 12) + 1
+  //   const day = Math.floor(Math.random() * 28) + 1
+  //   randomDate = `2025-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+  // }
+
+  // rangeState.value.start = randomDate
+  // rangeState.value.end = randomDate
+  
+  // console.log('Random 2025 Date:', randomDate)
+})
 
 const internalRange = computed({
   get: () => ({

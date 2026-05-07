@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { today } from '@internationalized/date'
 
 interface AttendanceSummary {
@@ -17,6 +17,12 @@ const range = useState<{ start: string, end: string }>('attendance-range', () =>
 }))
 const isSelecting = useState('attendance-selecting', () => false)
 const calendarResetId = useState('calendar-reset-id', () => 0)
+
+onMounted(() => {
+  const t = today('Asia/Bangkok').toString()
+  range.value.start = t
+  range.value.end = t
+})
 
 const queryParams = computed(() => ({
   startDate: range.value.start,
